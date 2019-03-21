@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{% block body %}
+	<p>
+	<table>
+		<tr>
+			<th>Name</th>
+			<th>ID</th>
+			<th>Private</th>
+		</tr>
+		<tr>
+			<td>{{ found_map.name }}</td>
+			<td>{{ found_map.id }}</td>	
+			<td>{{ found_map.private }}</td>	
+		</tr>
+	</table>
+	</p>
+	<form method="POST" action="{{ url_for('maps_edit') }}">
+		<input type="text" name="name"/>
+		<input type="hidden" name="map_id" value="{{found_map.id}}"/>
+		<input type="submit" value="Rename map"/>
+	</form>
+{% endblock %}

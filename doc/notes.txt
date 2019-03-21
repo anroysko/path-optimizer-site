@@ -1,0 +1,2 @@
+GET /map/[ID]/ - Shows map with given ID
+
