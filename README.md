@@ -27,6 +27,10 @@ and can also decide whether to give them rights to edit it.
 * If logged in, sharing maps with other registered users
 
 ## Documentation links
+These reflect the current state of the project. More detailed documents will be added later.
+
 [Heroku app](https://infinite-sands-84798.herokuapp.com/)
+
 [User Stories](./doc/user_stories.md)
+
 [Database Diagram](./doc/database_diagram.png)
