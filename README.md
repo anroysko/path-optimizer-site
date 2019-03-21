@@ -17,7 +17,7 @@ the game might last multiple days.
 Once logged in, the user can invite other registered users to the map instead of sharing its ID,
 and can also decide whether to give them rights to edit it.
 
-Functionality:
+## Functionality:
 * Making a new map
 * Placing cities and roads on a map
 * Automatically completing road networks with approximate solutions
@@ -25,3 +25,8 @@ Functionality:
 * Sharing maps with its ID
 * If logged in, saving, editing and deleting saved maps
 * If logged in, sharing maps with other registered users
+
+## Documentation links
+[Heroku app](https://infinite-sands-84798.herokuapp.com/)
+[User Stories](./doc/user_stories.md)
+[Database Diagram](./doc/database_diagram.png)
