@@ -5,7 +5,7 @@ and do a bunch of other stuff not relevant to this project. The game takes place
 grid, and each city or road occupies one hexagonal tile. Connecting cities with roads gives the player
 benefits, but since roads cost upkeep, it can be hard to do so while using the minimum amount of
 roads possible. If we assume that some roads have already been built and cannot be removed,
-it is in fact NP-hard by a reduction very similar to the last one in [this paper](https://www.jstor.org/stable/2100192).
+it is in fact NP-hard by a reduction very similar to the last one in [this classic paper](https://www.jstor.org/stable/2100192).
 
 The user can place cities and roads, then have an algorithm connect all cities with minimal number
 of roads added. They can also name the map, and share it to others by giving out its ID.
