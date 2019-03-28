@@ -33,10 +33,10 @@ def maps_create():
 	db.session().commit()
 	return redirect("/maps/" + str(m.id))
 
-@app.route("/maps/edit/", methods=["POST"])
-def maps_edit():
+@app.route("/maps/edit/<map_id>", methods=["POST"])
+def maps_edit(map_id):
 	form = EditMapForm(request.form)
-	m = Map.query.get(int(form.map_id.data))
+	m = Map.query.get(map_id)
 	m.name = form.name.data
 	db.session().commit()
-	return redirect("/maps/" + str(m.id))
+	return redirect("/maps/" + str(map_id))

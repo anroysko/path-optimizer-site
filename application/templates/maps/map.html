@@ -17,19 +17,13 @@
 			</tr>
 		</table>
 		</p>
-		<form method="POST" action="{{ url_for('maps_edit') }}">
+		<form method="POST" action="{{ url_for('maps_edit', map_id = found_map.id) }}">
 			<table>
 				<tr><td>
 					{{ form.name.label }}
 				</td></tr>
 				<tr><td>
 					{{ form.name }}
-				</td></tr>
-				<tr><td>
-					{{ form.map_id.label }}
-				</td></tr>
-				<tr><td>
-					{{ form.map_id }}
 				</td></tr>
 				<tr><td colspan="2">
 					<input type="submit" value="Rename map"/>
