@@ -1,38 +1,42 @@
 {% extends "layout.html" %}
 {% block body %}
-	<p>
-	<table>
-		<tr>
-			<th>Name</th>
-			<th>ID</th>
-			<th>Private</th>
-		</tr>
-		<tr>
-			<td>{{ found_map.name }}</td>
-			<td>{{ found_map.id }}</td>	
-			<td>{{ found_map.private }}</td>	
-		</tr>
-	</table>
-	</p>
-	<form method="POST" action="{{ url_for('maps_edit') }}">
+	{% if found_map == None %}
+		<p>Map doesn't exist or is private </p>
+	{% else %}
+		<p>
 		<table>
-			<tr><td>
-				{{ form.name.label }}
-			</td></tr>
-			<tr><td>
-				{{ form.name }}
-			</td></tr>
-			<tr><td>
-				{{ form.map_id.label }}
-			</td></tr>
-			<tr><td>
-				{{ form.map_id }}
-			</td></tr>
-			<tr><td colspan="2">
-				<input type="submit" value="Rename map"/>
-			</td></tr>
+			<tr>
+				<th>Name</th>
+				<th>ID</th>
+				<th>Private</th>
+			</tr>
+			<tr>
+				<td>{{ found_map.name }}</td>
+				<td>{{ found_map.id }}</td>	
+				<td>{{ found_map.private }}</td>	
+			</tr>
 		</table>
-	</form>
-	
-	<a href="/">back to index</a>
+		</p>
+		<form method="POST" action="{{ url_for('maps_edit') }}">
+			<table>
+				<tr><td>
+					{{ form.name.label }}
+				</td></tr>
+				<tr><td>
+					{{ form.name }}
+				</td></tr>
+				<tr><td>
+					{{ form.map_id.label }}
+				</td></tr>
+				<tr><td>
+					{{ form.map_id }}
+				</td></tr>
+				<tr><td colspan="2">
+					<input type="submit" value="Rename map"/>
+				</td></tr>
+			</table>
+		</form>
+		
+		<a href="/">back to index</a>
+	{% endif %}
 {% endblock %}

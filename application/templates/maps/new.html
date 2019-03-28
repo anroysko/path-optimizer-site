@@ -3,12 +3,22 @@
 {% block body %}
 <form method="POST" action="{{ url_for('maps_create') }}">
 	<table>
-		<tr><td>
+		<tr>
+		<td>
 			{{ form.name.label }}
-		</td></tr>
-		<tr><td>
+		</td>
+		<td>
 			{{ form.name }}
-		</td></tr>
+		</td>
+		</tr>
+		<tr>
+		<td>
+			{{ form.private.label }}
+		</td>
+		<td>
+			{{ form.private }}
+		</td>
+		</tr>
 		<tr><td colspan="2">
 			<input type="submit" value="Add a new map"/>
 		</td></tr>
