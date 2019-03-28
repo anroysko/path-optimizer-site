@@ -10,7 +10,7 @@ class LoginForm(FlaskForm):
 
 class RegisterForm(FlaskForm):
 	username = StringField("Username", [validators.Length(min=1)])
-	password = PasswordField("Password")
+	password = PasswordField("Password", [validators.Length(min=1)])
 
 	class Meta:
 		csrf = False

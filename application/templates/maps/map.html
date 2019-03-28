@@ -22,9 +22,16 @@
 				<tr><td>
 					{{ form.name.label }}
 				</td></tr>
-				<tr><td>
+				<tr>
+				<td>
 					{{ form.name }}
-				</td></tr>
+				</td>
+				<td>
+					{% for error in form.name.errors %}
+						<li>{{ error }}</li>
+					{% endfor %}
+				</td>
+				</tr>
 				<tr><td colspan="2">
 					<input type="submit" value="Rename map"/>
 				</td></tr>

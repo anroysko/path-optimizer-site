@@ -10,6 +10,11 @@
 		<td>
 			{{ form.name }}
 		</td>
+		<td>
+			{% for error in form.name.errors %}
+			<li>{{ error }}</li>
+			{% endfor %}
+		</td>
 		</tr>
 		<tr>
 		<td>
@@ -17,6 +22,11 @@
 		</td>
 		<td>
 			{{ form.private }}
+		</td>
+		<td>
+			{% for error in form.private.errors %}
+			<li>{{ error }}</li>
+			{% endfor %}
 		</td>
 		</tr>
 		<tr><td colspan="2">

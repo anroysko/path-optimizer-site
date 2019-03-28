@@ -13,7 +13,6 @@ def maps_view(map_id):
 	# Hacked way to not show a private map you are not the owner of
 	# Note that you can still currently edit private maps you don't own :P
 	if found_map != None and found_map.private and found_map.account_id != None and found_map.account_id != current_user.get_id():
-		print(str(found_map.private) + " " + str(found_map.account_id) + " " + str(current_user.get_id()))
 		found_map = None
 
 	return render_template("maps/map.html", found_map = found_map, form = EditMapForm())
@@ -25,6 +24,9 @@ def maps_form():
 @app.route("/maps/", methods=["POST"])
 def maps_create():
 	form = NewMapForm(request.form)
+	if not form.validate():
+		return render_template("/maps/new.html", form = form)
+
 	m = Map(form.name.data)
 	m.private = form.private.data
 	m.account_id = current_user.get_id()
@@ -36,7 +38,11 @@ def maps_create():
 @app.route("/maps/edit/<map_id>", methods=["POST"])
 def maps_edit(map_id):
 	form = EditMapForm(request.form)
-	m = Map.query.get(map_id)
+	if not form.validate():
+		found_map = Map.query.get(map_id)
+		return render_template("/maps/map.html", found_map = found_map, form = form)
+
+	m = Map.query.get(map_id) #TTETT m isn't null
 	m.name = form.name.data
 	db.session().commit()
 	return redirect("/maps/" + str(map_id))
