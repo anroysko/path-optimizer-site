@@ -17,7 +17,7 @@ the game might last multiple days.
 Once logged in, the user can invite other registered users to the map instead of sharing its ID,
 and can also decide whether to give them rights to edit it.
 
-## Functionality:
+## Future Functionality:
 * Making a new map
 * Placing cities and roads on a map
 * Automatically completing road networks with approximate solutions
@@ -25,6 +25,8 @@ and can also decide whether to give them rights to edit it.
 * Sharing maps with its ID
 * If logged in, saving, editing and deleting saved maps
 * If logged in, sharing maps with other registered users
+
+See documentation links for documentation on current features
 
 ## Documentation links
 These reflect the current state of the project. More detailed documents will be added later.
@@ -34,3 +36,7 @@ These reflect the current state of the project. More detailed documents will be 
 [User Stories](./doc/user_stories.md)
 
 [Database Diagram](./doc/new_database_diagram.png)
+
+## Test account credentials
+* username - password
+* user2 - pass2

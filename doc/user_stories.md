@@ -1,5 +1,10 @@
 # User Stories
-- As a User, I want to make a new map
-- As a User, I want to rename a map
-- As a User, I want to view Maps I've created
-- As a User, I want to share Maps with my friends
+- As a user, I want to make a new map
+- As a user, I want to edit a map
+- As a user, I want to delete a map
+- As a user, I want to share maps by giving out its URL
+- As a user, I want to register
+- As a user, I want to log in
+- As a logged in user, I want to log out
+- As a logged in user, I want to have maps only I can see
+- As a logged in user, I want to see all maps I've created

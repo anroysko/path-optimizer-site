@@ -1,0 +1,31 @@
+digraph {
+	graph [pad="0.5", nodesep="0.5", ranksep="2"];
+	node [shape=plain]
+	rankdir=LR;
+
+
+	account [label=<
+	<table border="1" cellborder="0" cellspacing="0">
+		<tr><td colspan="2"><i>account</i></td></tr>
+		<tr><td port="1">id</td><td>int, pk</td></tr>
+		<tr><td>date_created</td><td>date</td></tr>
+		<tr><td>date_updated</td><td>date</td></tr>
+		<tr><td>username</td><td>string</td></tr>
+		<tr><td>password</td><td>string</td></tr>
+	</table>>];
+
+	map [label=<
+	<table border="1" cellborder="0" cellspacing="0">
+		<tr><td colspan="2"><i>map</i></td></tr>
+		<tr><td>id</td><td>int, pk</td></tr>
+		<tr><td>date_created</td><td>date</td></tr>
+		<tr><td>date_updated</td><td>date</td></tr>
+		<tr><td>name</td><td>string</td></tr>
+		<tr><td>private</td><td>boolean</td></tr>
+		<tr><td>account_id</td><td port="2">int</td></tr>
+	</table>>];
+
+
+	map:2 -> account:1;
+}
+
