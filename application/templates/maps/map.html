@@ -19,21 +19,47 @@
 		</p>
 		<form method="POST" action="{{ url_for('maps_edit', map_id = found_map.id) }}">
 			<table>
-				<tr><td>
-					{{ form.name.label }}
-				</td></tr>
+				<tr><th>Edit Map</th></tr>
+
 				<tr>
+				<td>
+					{{ form.name.label }}
+				</td>
 				<td>
 					{{ form.name }}
 				</td>
 				<td>
 					{% for error in form.name.errors %}
-						<li>{{ error }}</li>
+					<li>{{ error }}</li>
 					{% endfor %}
 				</td>
 				</tr>
+
+				<tr>
+				<td>
+					{{ form.private.label }}
+				</td>
+				<td>
+					{{ form.private }}
+				</td>
+				<td>
+					{% for error in form.private.errors %}
+					<li>{{ error }}</li>
+					{% endfor %}
+				</td>
+				</tr>
+
 				<tr><td colspan="2">
-					<input type="submit" value="Rename map"/>
+					<input type="submit" value="Edit"/>
+				</td></tr>
+			</table>
+		</form>
+		<br>
+		<form method="POST" action="{{ url_for('maps_delete', map_id = found_map.id) }}">
+			<table>
+				<tr><th>Delete Map</th></tr>
+				<tr><td colspan="2">
+					<input type="submit" value="Delete"/>
 				</td></tr>
 			</table>
 		</form>

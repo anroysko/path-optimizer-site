@@ -9,5 +9,6 @@ class NewMapForm(FlaskForm):
 
 class EditMapForm(FlaskForm):
 	name = StringField("New name", [validators.Length(min=1)])
+	private = BooleanField("Private")
 	class Meta:
 		csrf = False

@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block body %}
-<form method="POST" action="{{ url_for('maps_create') }}">
+<form method="POST" action="{{ url_for('maps_new') }}">
 	<table>
 		<tr>
 		<td>
@@ -30,7 +30,7 @@
 		</td>
 		</tr>
 		<tr><td colspan="2">
-			<input type="submit" value="Add a new map"/>
+			<input type="submit" value="Make a new map"/>
 		</td></tr>
 	</table>
 </form>

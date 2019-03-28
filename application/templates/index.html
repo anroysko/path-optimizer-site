@@ -2,13 +2,24 @@
 
 {% block body %}
 <p>
+	<a href="{{ url_for('maps_new') }}">Make a new map</a>
+	<br>
 
-	<a href="/maps/new">Make a new map</a>
-	Alternatively, you can view and edit some existing map:
+	{% if current_user.is_authenticated %}
+		<table>
+		<th>Your maps: </th>
+		{% for mp in user_maps %}
+			<tr>
+				<th><a href="/maps/{{ mp.id }}">{{mp.name}}</a></th>
+			</tr>
+		{% endfor %}
+		</table>
+	{% endif %}
+
 	<table>
-	{% for mp in maps %}
+	<th> Public maps: </th>
+	{% for mp in public_maps %}
 		<tr>
-			<th>{{mp.id}}</th>
 			<th><a href="/maps/{{ mp.id }}">{{mp.name}}</a></th>
 		</tr>
 	{% endfor %}
