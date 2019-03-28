@@ -33,4 +33,4 @@ These reflect the current state of the project. More detailed documents will be 
 
 [User Stories](./doc/user_stories.md)
 
-[Database Diagram](./doc/database_diagram.png)
+[Database Diagram](./doc/new_database_diagram.png)
