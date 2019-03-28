@@ -1,5 +1,4 @@
 {% extends "layout.html" %}
-
 {% block body %}
 	<p>
 	<table>
@@ -16,9 +15,24 @@
 	</table>
 	</p>
 	<form method="POST" action="{{ url_for('maps_edit') }}">
-		<input type="text" name="name"/>
-		<input type="hidden" name="map_id" value="{{found_map.id}}"/>
-		<input type="submit" value="Rename map"/>
+		<table>
+			<tr><td>
+				{{ form.name.label }}
+			</td></tr>
+			<tr><td>
+				{{ form.name }}
+			</td></tr>
+			<tr><td>
+				{{ form.map_id.label }}
+			</td></tr>
+			<tr><td>
+				{{ form.map_id }}
+			</td></tr>
+			<tr><td colspan="2">
+				<input type="submit" value="Rename map"/>
+			</td></tr>
+		</table>
 	</form>
+	
 	<a href="/">back to index</a>
 {% endblock %}

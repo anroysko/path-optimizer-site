@@ -2,7 +2,16 @@
 
 {% block body %}
 <form method="POST" action="{{ url_for('maps_create') }}">
-	<input type="text" name="name"/>
-	<input type="submit" value="Create new map"/>
+	<table>
+		<tr><td>
+			{{ form.name.label }}
+		</td></tr>
+		<tr><td>
+			{{ form.name }}
+		</td></tr>
+		<tr><td colspan="2">
+			<input type="submit" value="Add a new map"/>
+		</td></tr>
+	</table>
 </form>
 {% endblock %}
