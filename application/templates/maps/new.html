@@ -29,6 +29,32 @@
 			{% endfor %}
 		</td>
 		</tr>
+		<tr>
+		<td>
+			{{ form.width.label }}
+		</td>
+		<td>
+			{{ form.width }}
+		</td>
+		<td>
+			{% for error in form.width.errors %}
+			<li>{{ error }}</li>
+			{% endfor %}
+		</td>
+		</tr>
+		<tr>
+		<td>
+			{{ form.height.label }}
+		</td>
+		<td>
+			{{ form.height }}
+		</td>
+		<td>
+			{% for error in form.height.errors %}
+			<li>{{ error }}</li>
+			{% endfor %}
+		</td>
+		</tr>
 		<tr><td colspan="2">
 			<input type="submit" value="Make a new map"/>
 		</td></tr>

@@ -9,6 +9,12 @@ class Map(db.Model):
 	private = db.Column(db.Boolean, nullable=False, default=False)
 	account_id = db.Column(db.Integer, db.ForeignKey('account.id'))
 
-	def __init__(self, name):
+	width = db.Column(db.Integer, nullable=False)
+	height = db.Column(db.Integer, nullable=False)
+
+	def __init__(self, name, private, width, height, account_id):
 		self.name = name
-		self.done = False
+		self.private = private
+		self.width = width
+		self.height = height
+		self.account_id = account_id

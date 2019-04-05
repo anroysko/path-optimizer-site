@@ -16,7 +16,7 @@ def maps_view(map_id):
 		found_map = None
 	
 	if found_map != None:
-		return render_template("maps/map.html", found_map = found_map, form = EditMapForm(formdata=MultiDict({'name':found_map.name, 'private': found_map.private})))
+		return render_template("maps/map.html", found_map = found_map, form = EditMapForm(formdata=MultiDict({'name':found_map.name, 'private': found_map.private, 'width':found_map.width, 'height':found_map.height})))
 	else:
 		return render_template("maps/map.html", found_map = found_map, form = EditMapForm())
 		
@@ -30,9 +30,7 @@ def maps_new():
 	if not form.validate():
 		return render_template("/maps/new.html", form = form)
 
-	m = Map(form.name.data)
-	m.private = form.private.data
-	m.account_id = current_user.get_id()
+	m = Map(form.name.data, form.private.data, form.width.data, form.height.data, current_user.get_id())
 
 	db.session().add(m)
 	db.session().commit()
@@ -48,6 +46,8 @@ def maps_edit(map_id):
 		
 	m.name = form.name.data
 	m.private = form.private.data
+	m.width = form.width.data
+	m.height = form.height.data
 
 	db.session().commit()
 	return redirect("/maps/" + str(map_id))
