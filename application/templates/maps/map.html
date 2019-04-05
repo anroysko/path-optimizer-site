@@ -3,20 +3,119 @@
 	{% if found_map == None %}
 		<p>Map doesn't exist or is private </p>
 	{% else %}
-		<p>
-		<table>
-			<tr>
-				<th>Name</th>
-				<th>ID</th>
-				<th>Private</th>
-			</tr>
-			<tr>
+
+		<!--                 -->
+		<!-- Map information -->
+		<!--                 -->
+
+		<table class="table">
+			<thead class="thead-light">
+				<th scope="col">ID</th>
+				<th scope="col">Name</th>
+				<th scope="col">Private</th>
+			</thead>
+			<tbody>
+				<th scope="row">{{ found_map.id }}</th>
 				<td>{{ found_map.name }}</td>
-				<td>{{ found_map.id }}</td>	
-				<td>{{ found_map.private }}</td>	
-			</tr>
+				<td>{{ found_map.private }}</td>
+			</tbody>
 		</table>
-		</p>
+
+		<!--            -->
+		<!-- Actual map -->
+		<!--            -->
+
+		<div id="grid" class="hex-grid">
+			<div class="hex-row">
+				<div class="hex"></div>
+				<div class="hex"></div>
+				<div class="hex"></div>
+				<div class="hex"></div>
+			</div>
+			<div class="hex-row">
+				<div class="hex" onclick="echo('hohoho')"></div>
+				<div class="hex"></div>
+				<div class="hex"></div>
+				<div class="hex"></div>
+				<div class="hex"></div>
+			</div>
+			<div class="hex-row">
+				<div class="hex"></div>
+				<div class="hex"></div>
+				<div class="hex"></div>
+				<div class="hex"></div>
+				<div class="hex"></div>
+				<div class="hex"></div>
+			</div>
+			<div class="hex-row">
+				<div class="hex"></div>
+				<div class="hex"></div>
+				<div class="hex"></div>
+				<div class="hex"></div>
+				<div class="hex"></div>
+				<div class="hex"></div>
+				<div class="hex"></div>
+			</div>
+			<div class="hex-row">
+				<div class="hex"></div>
+				<div class="hex"></div>
+				<div class="hex"></div>
+				<div class="hex"></div>
+				<div class="hex"></div>
+				<div class="hex"></div>
+			</div>
+			<div class="hex-row">
+				<div class="hex"></div>
+				<div class="hex"></div>
+				<div class="hex"></div>
+				<div class="hex"></div>
+				<div class="hex"></div>
+			</div>
+			<div class="hex-row">
+				<div class="hex"></div>
+				<div class="hex"></div>
+				<div class="hex"></div>
+				<div class="hex"></div>
+			</div>
+		</div>
+
+		<!--                     -->
+		<!-- Buttons for editing -->
+		<!--                     -->
+		
+		<div class="container" style="margin-top:10px;margin-bottom:10px;">
+			<div class="row">
+				<div class="col-3" style="text-align:center;">
+					<div style="display:inline-block;">
+						<button>Save Map</button>
+					</div>
+				</div>
+				<div class="col-3" style="text-align:center;">
+					<div style="display:inline-block;">
+						<button>Edit Information</button>
+					</div>
+				</div>
+				<div class="col-3" style="text-align:center;">
+					<div style="display:inline-block;">
+						<button>Share</button>
+					</div>
+				</div>
+				<div class="col-3" style="text-align:center;">
+					<div style="display:inline-block;">
+						<button>Delete</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script src="/static/js/test.js"></script>
+
+		<!-- Edit metadata -->
+
+		<!-- Save Changes -->
+
+		<!-- Optimize! -->
+
 		<form method="POST" action="{{ url_for('maps_edit', map_id = found_map.id) }}">
 			<table>
 				<tr><th>Edit Map</th></tr>
@@ -63,5 +162,6 @@
 				</td></tr>
 			</table>
 		</form>
+
 	{% endif %}
 {% endblock %}
