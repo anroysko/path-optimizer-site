@@ -6,23 +6,24 @@
 	<br>
 
 	{% if current_user.is_authenticated %}
-		<table>
-		<th>Your maps: </th>
-		{% for mp in user_maps %}
-			<tr>
-				<th><a href="/maps/{{ mp.id }}">{{mp.name}}</a></th>
-			</tr>
-		{% endfor %}
-		</table>
+		<h2>Your maps:</h2>
+		<div class="d-flex flex-wrap flex-row bd-highlight mb-3">
+			{% for mp in user_maps %}
+				<div class="p-2 bd-highlight border rounded ml-1">
+					<a href="/maps/{{ mp.id }}">{{mp.name}}</a>
+				</div>
+			{% endfor %}
+		</div>
 	{% endif %}
 
 	<table>
-	<th> Public maps: </th>
-	{% for mp in public_maps %}
-		<tr>
-			<th><a href="/maps/{{ mp.id }}">{{mp.name}}</a></th>
-		</tr>
-	{% endfor %}
-	</table>
+	<h2>Public maps:</h2>
+	<div class="d-flex flex-wrap flex-row bd-highlight mb-3">
+		{% for mp in public_maps %}
+			<div class="p-2 bd-highlight border rounded ml-1">
+				<a href="/maps/{{ mp.id }}">{{mp.name}}</a>
+			</div>
+		{% endfor %}
+	</div>
 </p>
 {% endblock %}

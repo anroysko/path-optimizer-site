@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block body %}
 	{% if found_map == None %}
-		<p>Map doesn't exist or is private </p>
+		<h1>Map doesn't exist or is private </h1>
 	{% else %}
 
 		<!--                 -->
@@ -15,17 +15,98 @@
 				<th scope="col">Private</th>
 			</thead>
 			<tbody>
-				<th scope="row">{{ found_map.id }}</th>
+				<td>{{ found_map.id }}</td>
 				<td>{{ found_map.name }}</td>
 				<td>{{ found_map.private }}</td>
 			</tbody>
 		</table>
+		<div class="container" style="padding-top:10px;padding-bottom:10px;">
+			<div class="row">
+				<div class="col" style="text-align:center;">
+					<div style="display:inline-block;">
+						<button type="button" class="btn btn-light">Save Map</button>
+					</div>
+				</div>
+
+				<div class="col" style="text-align:center;">
+					<div style="display:inline-block;">
+						<button class="btn btn-light" type="button" data-toggle="collapse" data-target="#collapseEdit" aria-expanded="false" aria-controls="collapseEdit">
+							Edit Information
+						</button>
+					</div>
+				</div>
+
+				<div class="col" style="text-align:center;">
+					<div style="display:inline-block;">
+						<button class="btn btn-light" type="button" data-toggle="collapse" data-target="#collapseShare" aria-expanded="false" aria-controls="collapseShare">
+							Share
+						</button>
+					</div>
+				</div>
+
+				<div class="col" style="text-align:center;">
+					<div style="display:inline-block;">
+						<button class="btn btn-light" type="button" data-toggle="collapse" data-target="#collapseDelete" aria-expanded="false" aria-controls="collapseDelete">
+							Delete
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="collapse" id="collapseEdit">
+			<div class="card card-body">
+				<form method="POST" action="{{ url_for('maps_edit', map_id = found_map.id) }}">
+					<table class="table">
+						<thead class="thead-light">
+							<th scope="col">{{ form.name.label }}</th>
+							<th scope="col">{{ form.private.label}}</th>
+						</thead>
+						<tbody>
+							<tr>
+								<td>
+									{{ form.name }}
+
+									<ul>
+									{% for error in form.name.errors %}
+										<li>{{ error }}</li>
+									{% endfor %}
+									</ul>
+								</td>
+								<td>
+									{{ form.private }}
+
+									<ul>
+									{% for error in form.private.errors %}
+										<li>{{ error }}</li>
+									{% endfor %}
+									</ul>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<input type="submit" value="Confirm changes"/>
+				</form>
+			</div>
+		</div>
+		<div class="collapse" id="collapseShare">
+			<div class="card card-body">
+				The ID of this map is {{ found_map.id }}. Currently the way to share maps is to copy-paste it to the URL.
+			</div>
+		</div>
+		<div class="collapse" id="collapseDelete">
+			<div class="card card-body">
+				Do you really want to delete this map? <b>This action cannot be undone.</b>
+				<form method="POST" action="{{ url_for('maps_delete', map_id = found_map.id) }}">
+					<input type="submit" value="Delete"/>
+				</form>
+			</div>
+		</div>
 
 		<!--            -->
 		<!-- Actual map -->
 		<!--            -->
 
-		<div id="grid" class="hex-grid">
+		<div id="grid" class="hex-grid rounded-lg">
 			<div class="hex-row">
 				<div class="hex"></div>
 				<div class="hex"></div>
@@ -78,90 +159,6 @@
 				<div class="hex"></div>
 			</div>
 		</div>
-
-		<!--                     -->
-		<!-- Buttons for editing -->
-		<!--                     -->
-		
-		<div class="container" style="margin-top:10px;margin-bottom:10px;">
-			<div class="row">
-				<div class="col-3" style="text-align:center;">
-					<div style="display:inline-block;">
-						<button>Save Map</button>
-					</div>
-				</div>
-				<div class="col-3" style="text-align:center;">
-					<div style="display:inline-block;">
-						<button>Edit Information</button>
-					</div>
-				</div>
-				<div class="col-3" style="text-align:center;">
-					<div style="display:inline-block;">
-						<button>Share</button>
-					</div>
-				</div>
-				<div class="col-3" style="text-align:center;">
-					<div style="display:inline-block;">
-						<button>Delete</button>
-					</div>
-				</div>
-			</div>
-		</div>
-
 		<script src="/static/js/test.js"></script>
-
-		<!-- Edit metadata -->
-
-		<!-- Save Changes -->
-
-		<!-- Optimize! -->
-
-		<form method="POST" action="{{ url_for('maps_edit', map_id = found_map.id) }}">
-			<table>
-				<tr><th>Edit Map</th></tr>
-
-				<tr>
-				<td>
-					{{ form.name.label }}
-				</td>
-				<td>
-					{{ form.name }}
-				</td>
-				<td>
-					{% for error in form.name.errors %}
-					<li>{{ error }}</li>
-					{% endfor %}
-				</td>
-				</tr>
-
-				<tr>
-				<td>
-					{{ form.private.label }}
-				</td>
-				<td>
-					{{ form.private }}
-				</td>
-				<td>
-					{% for error in form.private.errors %}
-					<li>{{ error }}</li>
-					{% endfor %}
-				</td>
-				</tr>
-
-				<tr><td colspan="2">
-					<input type="submit" value="Edit"/>
-				</td></tr>
-			</table>
-		</form>
-		<br>
-		<form method="POST" action="{{ url_for('maps_delete', map_id = found_map.id) }}">
-			<table>
-				<tr><th>Delete Map</th></tr>
-				<tr><td colspan="2">
-					<input type="submit" value="Delete"/>
-				</td></tr>
-			</table>
-		</form>
-
 	{% endif %}
 {% endblock %}
