@@ -28,7 +28,7 @@
 			<div class="row">
 				<div class="col" style="text-align:center;">
 					<div style="display:inline-block;">
-						<button type="button" class="btn btn-light">Save Map</button>
+						<button type="button" class="btn btn-light" onclick="saveChanges()">Save Map</button>
 					</div>
 				</div>
 
@@ -59,7 +59,7 @@
 		</div>
 		<div class="collapse" id="collapseEdit">
 			<div class="card card-body">
-				<form method="POST" action="{{ url_for('maps_edit', map_id = found_map.id) }}">
+				<form method="POST" action="{{ url_for('map_edit', map_id = found_map.id) }}">
 					<table class="table">
 						<thead class="thead-light">
 							<th scope="col">{{ form.name.label }}</th>
@@ -120,7 +120,7 @@
 		<div class="collapse" id="collapseDelete">
 			<div class="card card-body">
 				Do you really want to delete this map? <b>This action cannot be undone.</b>
-				<form method="POST" action="{{ url_for('maps_delete', map_id = found_map.id) }}">
+				<form method="POST" action="{{ url_for('map_delete', map_id = found_map.id) }}">
 					<input type="submit" value="Delete"/>
 				</form>
 			</div>
@@ -130,58 +130,21 @@
 		<!-- Actual map -->
 		<!--            -->
 
-		<div id="grid" class="hex-grid rounded-lg">
-			<div class="hex-row">
-				<div class="hex"></div>
-				<div class="hex"></div>
-				<div class="hex"></div>
-				<div class="hex"></div>
-			</div>
-			<div class="hex-row">
-				<div class="hex" onclick="echo('hohoho')"></div>
-				<div class="hex"></div>
-				<div class="hex"></div>
-				<div class="hex"></div>
-				<div class="hex"></div>
-			</div>
-			<div class="hex-row">
-				<div class="hex"></div>
-				<div class="hex"></div>
-				<div class="hex"></div>
-				<div class="hex"></div>
-				<div class="hex"></div>
-				<div class="hex"></div>
-			</div>
-			<div class="hex-row">
-				<div class="hex"></div>
-				<div class="hex"></div>
-				<div class="hex"></div>
-				<div class="hex"></div>
-				<div class="hex"></div>
-				<div class="hex"></div>
-				<div class="hex"></div>
-			</div>
-			<div class="hex-row">
-				<div class="hex"></div>
-				<div class="hex"></div>
-				<div class="hex"></div>
-				<div class="hex"></div>
-				<div class="hex"></div>
-				<div class="hex"></div>
-			</div>
-			<div class="hex-row">
-				<div class="hex"></div>
-				<div class="hex"></div>
-				<div class="hex"></div>
-				<div class="hex"></div>
-				<div class="hex"></div>
-			</div>
-			<div class="hex-row">
-				<div class="hex"></div>
-				<div class="hex"></div>
-				<div class="hex"></div>
-				<div class="hex"></div>
-			</div>
+		<div id="hex-grid" class="hex-grid rounded-lg" data-w="{{found_map.width}}" data-h="{{found_map.height}}" data-hexes="{{ hexes_str }}">
+			{% for y in range(found_map.height) %}
+				<div class="hex-row">
+					{% for x in range(found_map.width + (y % 2)) %}
+						{% set i = (x+y*(found_map.width + 1)) | string %}
+						{% if not i in hexes %}
+							<div id="{{ x }},{{ y }}" class="hex" onclick="hexClick({{ x }},{{ y }})"></div>
+						{% elif hexes[i] == "1" %}
+							<div id="{{ x }},{{ y }}" class="hex hex-city" onclick="hexClick({{ x }},{{ y }})"></div>
+						{% elif hexes[i] == "2" %}
+							<div id="{{ x }},{{ y }}" class="hex hex-road" onclick="hexClick({{ x }},{{ y }})"></div>
+						{% endif %}
+					{% endfor %}
+				</div>
+			{% endfor %}
 		</div>
 		<script src="/static/js/test.js"></script>
 	{% endif %}

@@ -2,7 +2,7 @@
 
 {% block body %}
 <p>
-	<a href="{{ url_for('maps_new') }}">Make a new map</a>
+	<a href="{{ url_for('map_new') }}">Make a new map</a>
 	<br>
 
 	{% if current_user.is_authenticated %}
@@ -10,7 +10,7 @@
 		<div class="d-flex flex-wrap flex-row bd-highlight mb-3">
 			{% for mp in user_maps %}
 				<div class="p-2 bd-highlight border rounded ml-1">
-					<a href="/maps/{{ mp.id }}">{{mp.name}}</a>
+					<a href="/map/{{ mp.id }}">{{mp.name}}</a>
 				</div>
 			{% endfor %}
 		</div>
@@ -21,7 +21,7 @@
 	<div class="d-flex flex-wrap flex-row bd-highlight mb-3">
 		{% for mp in public_maps %}
 			<div class="p-2 bd-highlight border rounded ml-1">
-				<a href="/maps/{{ mp.id }}">{{mp.name}}</a>
+				<a href="/map/{{ mp.id }}">{{mp.name}}</a>
 			</div>
 		{% endfor %}
 	</div>

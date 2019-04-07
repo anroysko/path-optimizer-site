@@ -2,7 +2,7 @@ from flask import render_template, request, redirect, url_for
 from flask_login import login_required, current_user
 
 from application import app, db
-from application.maps.models import Map
+from application.map.models import Map
 from sqlalchemy import update
 
 @app.route("/")

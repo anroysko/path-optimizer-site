@@ -18,6 +18,12 @@
 	height: 100px;
 	width: 100px;
 }
+.hex-city {
+	background-color: grey;
+}
+.hex-road {
+	background-color: yellow;
+}
 .hex:hover {
 	border-width: 4px;
 }

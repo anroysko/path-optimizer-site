@@ -11,6 +11,7 @@ class Map(db.Model):
 
 	width = db.Column(db.Integer, nullable=False)
 	height = db.Column(db.Integer, nullable=False)
+	hexes = db.relationship("Hex", backref='map', lazy=True, cascade="all, delete-orphan")
 
 	def __init__(self, name, private, width, height, account_id):
 		self.name = name

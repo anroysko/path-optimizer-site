@@ -16,10 +16,11 @@ db = SQLAlchemy(app)
 
 #Site-specific functionality
 from application import views
-from application.maps import models
-from application.maps import views
+from application.map import models
+from application.map import views
 from application.auth import models
 from application.auth import views
+from application.hex import models
 
 #Logging in
 from application.auth.models import User
