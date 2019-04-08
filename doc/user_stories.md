@@ -2,6 +2,7 @@
 - As a user, I want to make a new map
 - As a user, I want to edit a map
 - As a user, I want to delete a map
+- As a user, I want to edit the hex grid of a map
 - As a user, I want to share maps by giving out its URL
 - As a user, I want to register
 - As a user, I want to log in

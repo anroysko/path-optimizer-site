@@ -17,15 +17,28 @@ digraph {
 	map [label=<
 	<table border="1" cellborder="0" cellspacing="0">
 		<tr><td colspan="2"><i>map</i></td></tr>
-		<tr><td>id</td><td>int, pk</td></tr>
+		<tr><td port="2">id</td><td>int, pk</td></tr>
 		<tr><td>date_created</td><td>date</td></tr>
 		<tr><td>date_updated</td><td>date</td></tr>
 		<tr><td>name</td><td>string</td></tr>
 		<tr><td>private</td><td>boolean</td></tr>
-		<tr><td>account_id</td><td port="2">int</td></tr>
+		<tr><td>account_id</td><td port="3">int</td></tr>
+	</table>>];
+
+	hex [label=<
+	<table border="1" cellborder="0" cellspacing="0">
+		<tr><td colspan="2"><i>hex</i></td></tr>
+		<tr><td>id</td><td>int, pk</td></tr>
+		<tr><td>date_created</td><td>date</td></tr>
+		<tr><td>date_updated</td><td>date</td></tr>
+		<tr><td>x</td><td>int</td></tr>
+		<tr><td>y</td><td>int</td></tr>
+		<tr><td>hex_type</td><td>int</td></tr>
+		<tr><td>map_id</td><td port="4">int</td></tr>
 	</table>>];
 
 
-	map:2 -> account:1;
+	map:3 -> account:1;
+	hex:4 -> map:2;
 }
 
