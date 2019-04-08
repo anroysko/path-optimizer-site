@@ -9,7 +9,7 @@ from sqlalchemy.sql import text
 @app.route("/")
 def index():
 	public_maps = db.engine.execute("SELECT * FROM map WHERE private=False")
-	s = text("SELECT Map.*, Hex.map_id FROM"
+	s = text("SELECT Map.* FROM"
 		" MAP LEFT JOIN Hex ON Hex.map_id = Map.id"
 		" WHERE (NOT Map.private OR Map.account_id = :i)"
 		" GROUP BY Map.id"
