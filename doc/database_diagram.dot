@@ -22,7 +22,7 @@ digraph {
 		<tr><td>date_updated</td><td>date</td></tr>
 		<tr><td>name</td><td>string</td></tr>
 		<tr><td>private</td><td>boolean</td></tr>
-		<tr><td>account_id</td><td port="3">int</td></tr>
+		<tr><td>account_id</td><td port="3">int, fk</td></tr>
 	</table>>];
 
 	hex [label=<
@@ -34,7 +34,7 @@ digraph {
 		<tr><td>x</td><td>int</td></tr>
 		<tr><td>y</td><td>int</td></tr>
 		<tr><td>hex_type</td><td>int</td></tr>
-		<tr><td>map_id</td><td port="4">int</td></tr>
+		<tr><td>map_id</td><td port="4">int, fk</td></tr>
 	</table>>];
 
 
