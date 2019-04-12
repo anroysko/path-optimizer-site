@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block body %}
-	{% if found_map == None %}
-		<h1>Map doesn't exist or is private </h1>
+	{% if not view_perm %}
+		<h1>The map doesn't exist, or is private and you do not have permissions to view it.</h1>
 	{% else %}
 
 		<!--                 -->
@@ -12,119 +12,123 @@
 			<thead class="thead-light">
 				<th scope="col">ID</th>
 				<th scope="col">Name</th>
-				<th scope="col">Private</th>
 				<th scope="col">Width</th>
 				<th scope="col">Height</th>
 			</thead>
 			<tbody>
 				<td>{{ found_map.id }}</td>
 				<td>{{ found_map.name }}</td>
-				<td>{{ found_map.private }}</td>
 				<td>{{ found_map.width }}</td>
 				<td>{{ found_map.height }}</td>
 			</tbody>
 		</table>
 		<div class="container" style="padding-top:10px;padding-bottom:10px;">
 			<div class="row">
-				<div class="col" style="text-align:center;">
-					<div style="display:inline-block;">
-						<button type="button" class="btn btn-light" onclick="saveChanges()">Save Map</button>
+				{% if edit_perm %}
+					<div class="col" style="text-align:center;">
+						<div style="display:inline-block;">
+							<button type="button" class="btn btn-light" onclick="saveChanges()">Save Map</button>
+						</div>
 					</div>
-				</div>
 
-				<div class="col" style="text-align:center;">
-					<div style="display:inline-block;">
-						<button class="btn btn-light" type="button" data-toggle="collapse" data-target="#collapseEdit" aria-expanded="false" aria-controls="collapseEdit">
-							Edit Information
-						</button>
+					<div class="col" style="text-align:center;">
+						<div style="display:inline-block;">
+							<button class="btn btn-light" type="button" data-toggle="collapse" data-target="#collapseEdit" aria-expanded="false" aria-controls="collapseEdit">
+								Edit Information
+							</button>
+						</div>
 					</div>
-				</div>
-
-				<div class="col" style="text-align:center;">
-					<div style="display:inline-block;">
-						<button class="btn btn-light" type="button" data-toggle="collapse" data-target="#collapseShare" aria-expanded="false" aria-controls="collapseShare">
-							Share
-						</button>
+				{% endif %}
+				{% if owner_perm %}
+					<div class="col" style="text-align:center;">
+						<div style="display:inline-block;">
+							<button class="btn btn-light" type="button" data-toggle="collapse" data-target="#collapseShare" aria-expanded="false" aria-controls="collapseShare">
+								Share
+							</button>
+						</div>
 					</div>
-				</div>
-
-				<div class="col" style="text-align:center;">
-					<div style="display:inline-block;">
-						<button class="btn btn-light" type="button" data-toggle="collapse" data-target="#collapseDelete" aria-expanded="false" aria-controls="collapseDelete">
-							Delete
-						</button>
+					<div class="col" style="text-align:center;">
+						<div style="display:inline-block;">
+							<button class="btn btn-light" type="button" data-toggle="collapse" data-target="#collapseDelete" aria-expanded="false" aria-controls="collapseDelete">
+								Delete
+							</button>
+						</div>
 					</div>
-				</div>
+				{% endif %}
 			</div>
 		</div>
-		<div class="collapse" id="collapseEdit">
-			<div class="card card-body">
-				<form method="POST" action="{{ url_for('map_edit', map_id = found_map.id) }}">
-					<table class="table">
-						<thead class="thead-light">
-							<th scope="col">{{ form.name.label }}</th>
-							<th scope="col">{{ form.private.label}}</th>
-							<th scope="col">{{ form.width.label }}</th>
-							<th scope="col">{{ form.height.label}}</th>
-						</thead>
-						<tbody>
-							<tr>
-								<td>
-									{{ form.name }}
+		{% if edit_perm %}
+			<div class="collapse" id="collapseEdit">
+				<div class="card card-body">
+					<form method="POST" action="{{ url_for('map_edit', map_id = found_map.id) }}">
+						<table class="table">
+							<thead class="thead-light">
+								<th scope="col">{{ form.name.label }}</th>
+								<th scope="col">{{ form.private.label}}</th>
+								<th scope="col">{{ form.width.label }}</th>
+								<th scope="col">{{ form.height.label}}</th>
+							</thead>
+							<tbody>
+								<tr>
+									<td>
+										{{ form.name }}
 
-									<ul>
-									{% for error in form.name.errors %}
-										<li>{{ error }}</li>
-									{% endfor %}
-									</ul>
-								</td>
-								<td>
-									{{ form.private }}
+										<ul>
+										{% for error in form.name.errors %}
+											<li>{{ error }}</li>
+										{% endfor %}
+										</ul>
+									</td>
+									<td>
+										{{ form.private }}
 
-									<ul>
-									{% for error in form.private.errors %}
-										<li>{{ error }}</li>
-									{% endfor %}
-									</ul>
-								</td>
-								<td>
-									{{ form.width }}
+										<ul>
+										{% for error in form.private.errors %}
+											<li>{{ error }}</li>
+										{% endfor %}
+										</ul>
+									</td>
+									<td>
+										{{ form.width }}
 
-									<ul>
-									{% for error in form.width.errors %}
-										<li>{{ error }}</li>
-									{% endfor %}
-									</ul>
-								</td>
-								<td>
-									{{ form.height }}
+										<ul>
+										{% for error in form.width.errors %}
+											<li>{{ error }}</li>
+										{% endfor %}
+										</ul>
+									</td>
+									<td>
+										{{ form.height }}
 
-									<ul>
-									{% for error in form.height.errors %}
-										<li>{{ error }}</li>
-									{% endfor %}
-									</ul>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-					<input type="submit" value="Confirm changes"/>
-				</form>
+										<ul>
+										{% for error in form.height.errors %}
+											<li>{{ error }}</li>
+										{% endfor %}
+										</ul>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<input type="submit" value="Confirm changes"/>
+					</form>
+				</div>
 			</div>
-		</div>
-		<div class="collapse" id="collapseShare">
-			<div class="card card-body">
-				The ID of this map is {{ found_map.id }}. Currently the way to share maps is to copy-paste it to the URL.
+		{% endif %}
+		{% if owner_perm %}
+			<div class="collapse" id="collapseShare">
+				<div class="card card-body">
+					TODO: private setting and map sharing options here
+				</div>
 			</div>
-		</div>
-		<div class="collapse" id="collapseDelete">
-			<div class="card card-body">
-				Do you really want to delete this map? <b>This action cannot be undone.</b>
-				<form method="POST" action="{{ url_for('map_delete', map_id = found_map.id) }}">
-					<input type="submit" value="Delete"/>
-				</form>
+			<div class="collapse" id="collapseDelete">
+				<div class="card card-body">
+					Do you really want to delete this map? <b>This action cannot be undone.</b>
+					<form method="POST" action="{{ url_for('map_delete', map_id = found_map.id) }}">
+						<input type="submit" value="Delete"/>
+					</form>
+				</div>
 			</div>
-		</div>
+		{% endif %}
 
 		<!--            -->
 		<!-- Actual map -->
@@ -146,6 +150,6 @@
 				</div>
 			{% endfor %}
 		</div>
-		<script src="/static/js/test.js"></script>
+		<script src="/static/js/hexgrid.js"></script>
 	{% endif %}
 {% endblock %}

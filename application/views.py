@@ -3,20 +3,16 @@ from flask_login import login_required, current_user
 
 from application import app, db
 from application.map.models import Map
-from sqlalchemy import update
 from sqlalchemy.sql import text
+
+import application.perms.queries
 
 @app.route("/")
 def index():
-	public_maps = db.engine.execute("SELECT * FROM map WHERE private=False")
-	s = text("SELECT Map.* FROM"
-		" MAP LEFT JOIN Hex ON Hex.map_id = Map.id"
-		" WHERE (NOT Map.private OR Map.account_id = :i)"
-		" GROUP BY Map.id"
-		" HAVING COUNT(Hex.id) = 0")
-	aggregate_maps = db.engine.execute(s, i = current_user.get_id())
-	if current_user.get_id():
-		user_maps = db.engine.execute("SELECT * FROM map WHERE account_id=" + str(current_user.get_id()))
-		return render_template("index.html", public_maps=public_maps, user_maps=user_maps, aggregate_maps=aggregate_maps)
+	account_id = current_user.get_id()
+	if not account_id:
+		return render_template("index.html")
 	else:
-		return render_template("index.html", public_maps=public_maps, aggregate_maps=aggregate_maps)
+		owned_maps = get_owned_maps(account_id)
+		shared_maps = get_shared_maps(account_id)
+		return render_template("index.html", owned_maps=owned_maps, shared_maps=shared_maps)
