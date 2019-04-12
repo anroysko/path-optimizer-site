@@ -14,14 +14,6 @@ else:
 
 db = SQLAlchemy(app)
 
-#Site-specific functionality
-from application import views
-from application.map import models
-from application.map import views
-from application.auth import models
-from application.auth import views
-from application.hex import models
-
 #Logging in
 from application.auth.models import User
 from os import urandom
@@ -34,6 +26,16 @@ login_manager.init_app(app)
 login_manager.login_view = "auth_login"
 login_manager.login_message = "Please login to use this functionality"
 
+#Site-specific functionality
+from application import views
+from application.map import models
+from application.map import views
+from application.auth import models
+from application.auth import views
+from application.hex import models
+from application.perm import models
+
+# User loader
 @login_manager.user_loader
 def load_user(user_id):
 	return User.query.get(user_id)

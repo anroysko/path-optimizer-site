@@ -1,7 +1,6 @@
 from application import db
 
 class User(db.Model):
-
 	__tablename__ = "account"
 
 	id = db.Column(db.Integer, primary_key=True)
@@ -11,7 +10,8 @@ class User(db.Model):
 	username = db.Column(db.String(144), nullable=False)
 	password = db.Column(db.String(144), nullable=False)
 	maps = db.relationship("Map", backref='account', lazy=True)
-	
+	perms = db.relationship("Perm", backref='account', lazy=True, cascade="all, delete-orphan")
+
 	def __init__(self, username, password):
 		self.username = username
 		self.password = password
