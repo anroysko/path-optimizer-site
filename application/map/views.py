@@ -9,10 +9,9 @@ from application.map.models import Map
 from application.hex.models import Hex
 from application.map.forms import NewMapForm, EditMapForm
 from application.perm.queries import get_account_map_perms
-from application.hex.queries import get_map_hexes
+from application.hex.queries import get_map_hexes, build_hex_map
+from application.map.queries import make_new_map, edit_map, delete_map, save_map
 from sqlalchemy import update
-
-import application.map.queries
 import json
 
 @app.route("/map/<map_id>", methods=["GET"])
@@ -25,7 +24,6 @@ def map_view(map_id):
 	view_perm, edit_perm, owner_perm = get_account_map_perms(current_user.get_id(), map_id)
 	if not view_perm:
 		return render_template("map/map.html", view_perm=False)
-		return login_manager.unauthorized()
 
 	# Load hexes in the map
 	jsn = build_hex_map(m)
@@ -45,7 +43,7 @@ def map_new():
 		return render_template("/map/new.html", form = form)
 
 	# make the new map
-	m = make_new_map(form)
+	m = make_new_map(form, current_user.get_id())
 	return redirect("/map/" + str(m.id))
 
 @app.route("/map/<map_id>/edit", methods=["POST"])
@@ -54,13 +52,15 @@ def map_edit(map_id):
 	m = Map.query.get(map_id)
 	if m == None:
 		abort(404)
-	if (m.private) and (m.account_id != None) and (m.account_id != current_user.get_id()):
+
+	view_perm, edit_perm, owner_perm = get_account_map_perms(current_user.get_id(), map_id)
+	if not edit_perm:
 		return login_manager.unauthorized()
 
 	# Check that the form is valid
 	form = EditMapForm(request.form)
 	if not form.validate():
-		return render_template("/map/map.html", found_map = m, form = form)
+		return redirect("/map/" + str(m.id))
 
 	# Edit the map
 	m = edit_map(m, form)
@@ -72,7 +72,8 @@ def map_delete(map_id):
 	m = Map.query.get(map_id)
 	if m == None:
 		abort(404)
-	if (m.private) and (m.account_id != None) and (m.account_id != current_user.get_id()):
+	view_perm, edit_perm, owner_perm = get_account_map_perms(current_user.get_id(), map_id)
+	if not owner_perm:
 		return login_manager.unauthorized()
 
 	# Delete the map
@@ -85,10 +86,11 @@ def map_save(map_id):
 	m = Map.query.get(map_id)
 	if m == None:
 		abort(404)
-	if (m.private) and (m.account_id != None) and (m.account_id != current_user.get_id()):
+	view_perm, edit_perm, owner_perm = get_account_map_perms(current_user.get_id(), map_id)
+	if not edit_perm:
 		return login_manager.unauthorized()
 
-	fail = not save_map(m, request.get_json)
+	fail = not save_map(m, request.get_json())
 	if fail:
 		abort(400) # Failure due to bad request
 	else:

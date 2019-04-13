@@ -64,7 +64,6 @@
 						<table class="table">
 							<thead class="thead-light">
 								<th scope="col">{{ form.name.label }}</th>
-								<th scope="col">{{ form.private.label}}</th>
 								<th scope="col">{{ form.width.label }}</th>
 								<th scope="col">{{ form.height.label}}</th>
 							</thead>
@@ -75,15 +74,6 @@
 
 										<ul>
 										{% for error in form.name.errors %}
-											<li>{{ error }}</li>
-										{% endfor %}
-										</ul>
-									</td>
-									<td>
-										{{ form.private }}
-
-										<ul>
-										{% for error in form.private.errors %}
 											<li>{{ error }}</li>
 										{% endfor %}
 										</ul>

@@ -5,7 +5,7 @@ from application import app, db
 from application.map.models import Map
 from sqlalchemy.sql import text
 
-import application.perms.queries
+from application.perm.queries import get_owned_maps, get_shared_maps
 
 @app.route("/")
 def index():

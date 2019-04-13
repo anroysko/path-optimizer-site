@@ -6,8 +6,8 @@ class Perm(db.Model):
 	date_modified = db.Column(db.DateTime, default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
 
 	account_id = db.Column(db.Integer, db.ForeignKey('account.id'))
-	map_id = db.Column(db.Integer, db.ForeignKey('map.id'))
-	
+	map_id = db.Column(db.Integer, db.ForeignKey('map.id'), nullable=False)
+
 	# view_perm: Can view the map given the link. If the account is not None, sees the map on their index.
 	# edit_perm: Can edit the map.
 	# owner_perm: Can edit permissions of the map, and possibly delete it. Sees map as their own map on their index.
@@ -22,5 +22,5 @@ class Perm(db.Model):
 		self.edit_perm = edit_perm
 		self.owner_perm = owner_perm
 
-		assert (not edit_perm) or (view_perm)
-		assert (not owner_perm) or (edit_perm)
+		assert (not edit_perm) or (view_perm), "edit_perm implies view_perm"
+		assert (not owner_perm) or (edit_perm), "owner_perm implies edit_perm"
