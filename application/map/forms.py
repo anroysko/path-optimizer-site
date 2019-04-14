@@ -13,7 +13,12 @@ class EditMapForm(FlaskForm):
 	name = StringField("New name", [validators.Length(min=1)])
 	width = IntegerField("Map width", [validators.DataRequired(), validators.NumberRange(1, 10)])
 	height = IntegerField("Map height", [validators.DataRequired(), validators.NumberRange(1, 10)])
-	immutable = BooleanField("Immutable", default=False)
+
+	class Meta:
+		csrf = False
+
+class SearchMapForm(FlaskForm):
+	map_id = IntegerField("Map ID", [validators.DataRequired(), validators.NumberRange(min=1)])
 
 	class Meta:
 		csrf = False

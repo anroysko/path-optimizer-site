@@ -7,7 +7,7 @@ from flask import abort
 from application import app, db, login_manager
 from application.map.models import Map
 from application.hex.models import Hex
-from application.map.forms import NewMapForm, EditMapForm
+from application.map.forms import NewMapForm, EditMapForm, SearchMapForm
 from application.perm.queries import get_account_map_perms
 from application.hex.queries import get_map_hexes, build_hex_map
 from application.map.queries import make_new_map, edit_map, delete_map, save_map
@@ -31,16 +31,12 @@ def map_view(map_id):
 	# Serve the map
 	return render_template("map/map.html", found_map = m, hexes = jsn, hexes_str = json.dumps(jsn), view_perm=view_perm, edit_perm=edit_perm, owner_perm=owner_perm, form = EditMapForm())
 
-@app.route("/map/new/", methods=["GET","POST"])
+@app.route("/map/new/", methods=["POST"])
 def map_new():
-	# serve the new map page if requested
-	if request.method == "GET":
-		return render_template("map/new.html", form = NewMapForm())
-
 	# check that the form is valid
 	form = NewMapForm(request.form)
 	if not form.validate():
-		return render_template("/map/new.html", form = form)
+		return redirect("/")
 
 	# make the new map
 	m = make_new_map(form, current_user.get_id())
@@ -65,6 +61,14 @@ def map_edit(map_id):
 	# Edit the map
 	m = edit_map(m, form)
 	return redirect("/map/" + str(m.id))
+
+@app.route("/map/search", methods=["POST"])
+def map_search():
+	form = SearchMapForm(request.form)
+	if not form.validate():
+		return redirect("/")
+	else:
+		return redirect("/map/" + str(form.map_id.data))
 
 @app.route("/map/<map_id>/delete", methods=["POST"])
 def map_delete(map_id):
