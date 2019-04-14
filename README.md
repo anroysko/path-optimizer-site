@@ -8,25 +8,18 @@ roads possible. If we assume that some roads have already been built and cannot 
 it is in fact NP-hard by a reduction very similar to the last one in [this classic paper](https://www.jstor.org/stable/2100192).
 
 The user can place cities and roads, then have an algorithm connect all cities with minimal number
-of roads added. They can also name the map, and share it to others by giving out its ID.
+of roads added. They can also share the map to others by giving out its ID. If logged in, they can
+also share the map to specific other registered users.
 
-By logging in, the user can log in and save the setup, later loading it, possibly adding or
-removing cities and roads. Once a map is unnecessary the user can delete it. This is useful since
-the game might last multiple days.
-
-Once logged in, the user can invite other registered users to the map instead of sharing its ID,
-and can also decide whether to give them rights to edit it.
-
-## Future Functionality:
-* Making a new map
+## Functionality:
+* Creating, editing, deleting and saving maps
 * Placing cities and roads on a map
-* Automatically completing road networks with approximate solutions
-* Naming maps
-* Sharing maps with its ID
-* If logged in, saving, editing and deleting saved maps
-* If logged in, sharing maps with other registered users
-
-See documentation links for documentation on current features
+* Searching for maps by ID
+* Sharing maps with their ID
+* Registering and logging in, with server-side encryption of passwords
+* When logged in, Viewing maps you've created and maps shared to you
+* (TODO) If logged in, sharing maps with specific registered users
+* (TODO) Automatically completing road networks with approximate solutions
 
 ## Documentation links
 These reflect the current state of the project. More detailed documents will be added later.
@@ -42,3 +35,5 @@ These reflect the current state of the project. More detailed documents will be 
 ## Test account credentials
 * username - password
 * user2 - pass2
+
+Map IDs 1-6 are in use. Maps 3 and 4 are by username, maps 5 and 6 by user2.
