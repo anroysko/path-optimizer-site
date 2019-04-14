@@ -13,23 +13,32 @@
 
 <div id="collapseOne" class="collapse hide">
 	<div class="card-body">
-		<form method="POST" action="{{ url_for('map_new') }}">
+		<form method="POST" action="{{ url_for('map_new') }}" class="needs-validation" novalidate>
 			<div class="form-group row">
 				<label for="new_name_field" class="col-sm-2 col-form-label">Name</label>
 				<div class="col-sm-4">
-					<input type="text" class="form-control" id="new_name_field" name="name" placeholder="example">
+					<input type="text" class="form-control" id="new_name_field" name="name" placeholder="example" required>
+					<div class="invalid-feedback">
+						This field is required
+					</div>
 				</div>
 			</div>
 			<div class="form-group row">
 				<label for="new_width_field" class="col-sm-2 col-form-label">Width</label>
 				<div class="col-sm-4">
-					<input type="text" class="form-control" id="new_width_field" name="width" placeholder="5">
+					<input type="number" min="1" class="form-control" id="new_width_field" name="width" placeholder="5" required>
+					<div class="invalid-feedback">
+						Width and Height are positive integers
+					</div>
 				</div>
 			</div>
 			<div class="form-group row">
 				<label for="new_height_field" class="col-sm-2 col-form-label">Height</label>
 				<div class="col-sm-4">
-					<input type="text" class="form-control" id="new_height_field" name="height" placeholder="5">
+					<input type="number" min="1" class="form-control" id="new_height_field" name="height" placeholder="5" required>
+					<div class="invalid-feedback">
+						Width and Height are positive integers
+					</div>
 				</div>
 			</div>
 			<div class="form-group row">
@@ -48,13 +57,18 @@
 </div>
 <div id="collapseTwo" class="collapse hide">
 	<div class="card-body">
-		<form class="form-inline" action="{{ url_for('map_search') }}" method="POST">
-			<div class="form-group">
-				<label for="search_id_field">Map ID</label>
-				<input type="text" class="form-control mx-sm-1" id="search_id_field" name="map_id" placeholder="123">
-			</div>
-			<div class="form-group">
-				<button type="submit" class="btn btn-primary">Search</button>
+		<form action="{{ url_for('map_search') }}" method="POST" class="needs-validation" novalidate>
+			<div class="form-group row">
+				<label for="search_id_field" class="col-sm-1 col-form-label">Map ID</label>
+				<div class="col-sm-2">
+					<input type="number" min="1" class="form-control" id="search_id_field" name="map_id" placeholder="123" required>
+					<div class="invalid-feedback">
+						IDs are positive integers
+					</div>
+				</div>
+				<div class="col-sm-3">
+					<button type="submit" class="btn btn-primary">Search</button>
+				</div>
 			</div>
 		</form>
 	</div>
@@ -90,5 +104,8 @@
 		</div>
 	</div>
 {% endif %}
+
+<script src="/static/js/index_forms.js"></script>
+
 
 {% endblock %}
