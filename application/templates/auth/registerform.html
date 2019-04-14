@@ -1,46 +1,40 @@
 {% extends "layout.html" %}
 
 {% block body %}
-{{ error }}
-<form method="POST" action="{{ url_for('auth_register') }}">
-	<table>
-		<tr>
-		<td>
-		{{ form.username.label }}
-		</td>
-		<td>
-		{{ form.username }}
-		</td>
-		<td>
-		<ul>
-		{% for error in form.username.errors %}
-			<li>{{ error }}</li>
-		{% endfor %}
-		</ul>
-		</td>
-		</tr>
+        {% if form is not none and form.username.data is not none %}
+                {% set default_username = form.username.data %}
+        {% else %}
+                {% set default_username = "" %}
+        {% endif %}
 
-		<tr>
-		<td>
-		{{ form.password.label }}
-		</td>
-		<td>
-		{{ form.password }}
-		</td>
-		<td>
-		<ul>
-		{% for error in form.password.errors %}
-			<li>{{ error }}</li>
-		{% endfor %}
-		</ul>
-		</td>
-		</tr>
+	<form method="POST" action="{{ url_for('auth_register') }}" class="needs-validation" novalidate>
+		<div class="form-group row">
+			<label for="username_field" class="col-sm-1 col-form-label">Username</label>
+			<div class="col-sm-2">
+				<input type="text" class="form-control" id="username_field" name="username" placeholder="Username" value="{{ default_username }}" required>
+				<div class="invalid-feedback">
+					This field is required.
+				</div>
+			</div>
+			{% if existing_user_error %}
+				<div class="alert alert-danger col-sm-2" role="alert">
+					User already exists
+				</div>
+			{% endif %}
+		</div>
+		<div class="form-group row">
+			<label for="password_field" class="col-sm-1 col-form-label">Password</label>
+			<div class="col-sm-2">
+				<input type="password" class="form-control" id="password_field" name="password" placeholder="Password" required>
+				<div class="invalid-feedback">
+					This field is required.
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<button type="submit" class="btn btn-primary">Register</button>
+		</div>
+	</form>
 
-		<tr>
-		<td colspan="2">
-		<input type="submit" value="Register"/>
-		</td>
-		</tr>
-	</table>
-</form>
+	<script src="/static/js/bootstrap_forms.js"></script>
 {% endblock %}

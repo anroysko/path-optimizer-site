@@ -1,4 +1,10 @@
-from application import db
+from application import db, bcrypt
+
+def check_password(password_hash, plaintext):
+	return bcrypt.check_password_hash(password_hash, plaintext)
+
+def encrypt_password(plaintext):
+	return bcrypt.generate_password_hash(plaintext)
 
 class User(db.Model):
 	__tablename__ = "account"
@@ -8,12 +14,13 @@ class User(db.Model):
 	date_modified = db.Column(db.DateTime, default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
 
 	username = db.Column(db.String(144), nullable=False)
-	password = db.Column(db.String(144), nullable=False)
+	_password = db.Column(db.String(144), nullable=False) # Hashed
+
 	perms = db.relationship("Perm", backref='account', lazy=True, cascade="all, delete-orphan")
 
 	def __init__(self, username, password):
 		self.username = username
-		self.password = password
+		self._password = encrypt_password(password)
 
 	def get_id(self):
 		return self.id
