@@ -1,27 +1,92 @@
 {% extends "layout.html" %}
 
 {% block body %}
-<p>
-	<a href="{{ url_for('map_new') }}">Make a new map</a>
-	<br>
 
-	{% if current_user.is_authenticated %}
-		<h2>Your maps:</h2>
-		<div class="d-flex flex-wrap flex-row bd-highlight mb-3">
-			{% for mp in owned_maps %}
-				<div class="p-2 bd-highlight border rounded ml-1">
-					<a href="/map/{{ mp.id }}">{{mp.name}}</a>
-				</div>
-			{% endfor %}
+<a href="{{ url_for('map_new') }}">Make a new map</a>
+<div class="container" style="padding-top:10px;padding-bottom:10px;">
+	<div class="row">
+		<div class="col-sm-" style="text-align:center;">
+			<div style="display:inline-block;">
+				<button class="btn btn-light" type="button" data-toggle="collapse" data-target="#collapseNew" aria-expanded="false" aria-controls="collapseNew">
+					Make a new map
+				</button>
+			</div>
 		</div>
-		<h2>Maps shared to you:</h2>
-		<div class="d-flex flex-wrap flex-row bd-highlight mb-3">
-			{% for mp in shared_maps %}
-				<div class="p-2 bd-highlight border rounded ml-1">
-					<a href="/map/{{ mp.id }}">{{mp.name}}</a>
-				</div>
-			{% endfor %}
+		<div class="col-sm-" style="text-align:center;">
+			<div style="display:inline-block;">
+				<button class="btn btn-light" type="button" data-toggle="collapse" data-target="#collapseSearch" aria-expanded="false" aria-controls="collapseSearch">
+					Search
+				</button>
+			</div>
 		</div>
-	{% endif %}
-</p>
+	</div>
+</div>
+<div class="collapse" id="collapseNew">
+<div class="card card-body">
+	<b>Make a new map</b>
+	<form>
+		<div class="form-group row">
+			<label for="new_name_field" class="col-sm-2 col-form-label">Name</label>
+			<div class="col-sm-2">
+				<input type="text" class="form-control" id="new_name_field" placeholder="example">
+			</div>
+		</div>
+		<div class="form-group row">
+			<label for="new_width_field" class="col-sm-2 col-form-label">Width</label>
+			<div class="col-sm-2">
+				<input type="text" class="form-control" id="new_width_field" placeholder="5">
+			</div>
+		</div>
+		<div class="form-group row">
+			<label for="new_height_field" class="col-sm-2 col-form-label">Height</label>
+			<div class="col-sm-2">
+				<input type="text" class="form-control" id="new_height_field" placeholder="5">
+			</div>
+		</div>
+		<div class="form-group row">
+			<div class="col-sm-4">
+				<button type="submit" class="btn btn-primary">Sign in</button>
+			</div>
+		</div>
+	</form>
+</div>
+</div>
+
+<div class="collapse" id="collapseSearch">
+<div class="card card-body">
+	<b>Search for a map</b>
+	<form class="form-inline">
+		<div class="form-group">
+			<label for="search_id_field">Map ID</label>
+			<input type="text" class="form-control mx-sm-1" id="search_id_field" placeholder="123" required>
+			<div class="invalid-feedback">
+				Please pick a number
+			</div>
+		</div>
+		<div class="form-group">
+			<button type="submit" class="btn btn-primary">Search!</button>
+		</div>
+	</form>
+</div>
+</div>
+
+{% if current_user.is_authenticated %}
+	<h2>Your maps:</h2>
+	<div class="d-flex flex-wrap flex-row bd-highlight mb-3">
+		{% for mp in owned_maps %}
+			<div class="p-2 bd-highlight border rounded ml-1">
+				<a href="/map/{{ mp.id }}">{{mp.name}}</a>
+			</div>
+		{% endfor %}
+	</div>
+	<h2>Maps shared to you:</h2>
+	<div class="d-flex flex-wrap flex-row bd-highlight mb-3">
+		{% for mp in shared_maps %}
+			<div class="p-2 bd-highlight border rounded ml-1">
+				<a href="/map/{{ mp.id }}">{{mp.name}}</a>
+			</div>
+		{% endfor %}
+	</div>
+{% endif %}
+
 {% endblock %}
