@@ -4,7 +4,7 @@ def check_password(password_hash, plaintext):
 	return bcrypt.check_password_hash(password_hash, plaintext)
 
 def encrypt_password(plaintext):
-	return bcrypt.generate_password_hash(plaintext).decode('utf-8')
+	return bcrypt.generate_password_hash(plaintext, rounds=6).decode('utf-8')
 
 class User(db.Model):
 	__tablename__ = "account"
