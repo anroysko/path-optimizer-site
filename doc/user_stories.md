@@ -7,5 +7,4 @@
 - As a user, I want to register
 - As a user, I want to log in
 - As a logged in user, I want to log out
-- As a logged in user, I want to have maps only I can see
 - As a logged in user, I want to see all maps I've created
