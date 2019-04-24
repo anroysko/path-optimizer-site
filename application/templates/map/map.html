@@ -124,7 +124,7 @@
 		<!-- Actual map -->
 		<!--            -->
 
-		<div id="hex-grid" class="hex-grid rounded-lg" data-w="{{found_map.width}}" data-h="{{found_map.height}}" data-hexes="{{ hexes_str }}">
+		<div id="hex-grid" class="hex-grid rounded-lg {% if not edit_perm %} read-only {% endif %}" data-w="{{found_map.width}}" data-h="{{found_map.height}}" data-hexes="{{ hexes_str }}">
 			{% for y in range(found_map.height) %}
 				<div class="hex-row">
 					{% for x in range(found_map.width + (y % 2)) %}
