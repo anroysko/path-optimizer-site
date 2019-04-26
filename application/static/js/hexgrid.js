@@ -53,3 +53,7 @@ function saveChanges() {
 	// Remove warning about leaving with unsaved changes
 	window.onbeforeunload = null;
 }
+
+function optimize() {
+	alert("test")
+}

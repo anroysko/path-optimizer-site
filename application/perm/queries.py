@@ -23,7 +23,7 @@ def get_owned_maps(account_id):
 		" WHERE (Perm.owner_perm AND Perm.account_id = :i)"
 		" GROUP BY Map.id"
 		" HAVING COUNT(Perm.id) > 0")
-	return db.engine.execute(q, i = account_id)
+	return db.engine.execute(q, i = account_id).fetchall()
 
 def get_shared_maps(account_id):
 	q = text("SELECT Map.*"
@@ -33,5 +33,19 @@ def get_shared_maps(account_id):
 		" WHERE (Perm.view_perm AND NOT Perm.owner_perm AND Perm.account_id = :i)"
 		" GROUP BY Map.id"
 		" HAVING COUNT(Perm.id) > 0")
-	return db.engine.execute(q, i = account_id)
+	return db.engine.execute(q, i = account_id).fetchall()
 
+# Get all accounts with the given perms on the map
+def get_map_accounts(map_id, view_perm, edit_perm):
+	q = text("SELECT Account.*"
+		" FROM ACCOUNT"
+		" LEFT JOIN PERM"
+		" ON Perm.account_id = Account.id"
+		" WHERE (Perm.view_perm = :i AND Perm.edit_perm = :j AND Perm.map_id = :mi)"
+		" GROUP BY Account.id"
+		" HAVING COUNT(Perm.id) > 0")
+	return db.engine.execute(q, i = view_perm, j = edit_perm, mi = map_id).fetchall()
+
+def get_all_map_perms(map_id):
+	q = text("SELECT Perm.* FROM PERM WHERE Perm.map_id = :mi")
+	return db.engine.execute(q, mi = map_id).fetchall()

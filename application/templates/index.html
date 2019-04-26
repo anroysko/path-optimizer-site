@@ -17,7 +17,7 @@
 			<div class="form-group row">
 				<label for="new_name_field" class="col-sm-2 col-form-label">Name</label>
 				<div class="col-sm-4">
-					<input type="text" class="form-control" id="new_name_field" name="name" placeholder="example" required>
+					<input type="text" class="form-control" id="new_name_field" name="name" required>
 					<div class="invalid-feedback">
 						This field is required
 					</div>
@@ -26,18 +26,18 @@
 			<div class="form-group row">
 				<label for="new_width_field" class="col-sm-2 col-form-label">Width</label>
 				<div class="col-sm-4">
-					<input type="number" min="1" class="form-control" id="new_width_field" name="width" placeholder="5" required>
+					<input type="number" min="1" max="100" class="form-control" id="new_width_field" name="width" required>
 					<div class="invalid-feedback">
-						Width and Height are positive integers
+						Width and Height should be integers between 1 and 100
 					</div>
 				</div>
 			</div>
 			<div class="form-group row">
 				<label for="new_height_field" class="col-sm-2 col-form-label">Height</label>
 				<div class="col-sm-4">
-					<input type="number" min="1" class="form-control" id="new_height_field" name="height" placeholder="5" required>
+					<input type="number" min="1" max="100" class="form-control" id="new_height_field" name="height" required>
 					<div class="invalid-feedback">
-						Width and Height are positive integers
+						Width and Height should be integers between 1 and 100
 					</div>
 				</div>
 			</div>
@@ -61,7 +61,7 @@
 			<div class="form-group row">
 				<label for="search_id_field" class="col-sm-1 col-form-label">Map ID</label>
 				<div class="col-sm-2">
-					<input type="number" min="1" class="form-control" id="search_id_field" name="map_id" placeholder="123" required>
+					<input type="number" min="1" class="form-control" id="search_id_field" name="map_id" required>
 					<div class="invalid-feedback">
 						IDs are positive integers
 					</div>
@@ -106,6 +106,4 @@
 {% endif %}
 
 <script src="/static/js/bootstrap_forms.js"></script>
-
-
 {% endblock %}

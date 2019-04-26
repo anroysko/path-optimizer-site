@@ -4,142 +4,238 @@
 		<h1>The map doesn't exist, or is private and you do not have permissions to view it.</h1>
 	{% else %}
 
+
+		<!--      -->
+		<!-- Tabs -->
+		<!--      -->
+
+
+		<ul class="nav nav-pills mb-3" id="pills-tabs" role="tablist">
+		<li class="nav-item">
+			<a class="nav-link active" id="map-tab" data-toggle="pill" href="#map" role="tab" aria-controls="map" aria-selected="true">Map</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" id="info-tab" data-toggle="pill" href="#info" role="tab" aria-controls="info" aria-selected="false">Information</a>
+		</li>
+		{% if owner_permissions %}
+			<li class="nav-item">
+				<a class="nav-link" id="share-tab" data-toggle="pill" href="#share" role="tab" aria-controls="share" aria-selected="false">Share</a>
+			</li>
+		{% endif %}
+		</ul>
+
+
+		<!--          -->
+		<!-- Tab divs -->
+		<!--          -->
+
+
+		<div class="tab-content" id="tabsContent">
+
+
+		<!--         -->
+		<!-- Map tab -->
+		<!--         -->
+
+
+		<div class="tab-pane show active" id="map" role="tabpanel" aria-labelledby="map-tab">
+
+			{% if edit_perm %}
+			<div class="card card-body" style="margin-bottom:10px">
+				<div class="container" style="padding-top:10px;padding-bottom:10px;">
+					<div class="row">
+						<div class="col" style="text-align:center;">
+							<div style="display:inline-block;">
+								<button type="button" class="btn btn-light" onclick="saveChanges()">Save Map</button>
+							</div>
+						</div>
+						<div class="col" style="text-align:center;">
+							<div style="display:inline-block;">
+								<button type="button" class="btn btn-light" onclick="optimize()">Optimize paths</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			{% endif %}
+
+			<!--            -->
+			<!-- Actual map -->
+			<!--            -->
+			<div id="hex-grid" class="hex-grid rounded-lg {% if not edit_perm %} read-only {% endif %}" data-w="{{found_map.width}}" data-h="{{found_map.height}}" data-hexes="{{ hexes_str }}">
+				{% for y in range(found_map.height) %}
+					<div class="hex-row">
+						{% for x in range(found_map.width + (y % 2)) %}
+							{% set i = (x+y*(found_map.width + 1)) | string %}
+							{% if not i in hexes %}
+								<div id="{{ x }},{{ y }}" class="hex" onclick="hexClick({{ x }},{{ y }})"></div>
+							{% elif hexes[i] == "1" %}
+								<div id="{{ x }},{{ y }}" class="hex hex-city" onclick="hexClick({{ x }},{{ y }})"></div>
+							{% elif hexes[i] == "2" %}
+								<div id="{{ x }},{{ y }}" class="hex hex-road" onclick="hexClick({{ x }},{{ y }})"></div>
+							{% endif %}
+						{% endfor %}
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+
+
 		<!--                 -->
-		<!-- Map information -->
+		<!-- Information tab -->
 		<!--                 -->
 
-		<table class="table">
-			<thead class="thead-light">
-				<th scope="col">ID</th>
-				<th scope="col">Name</th>
-				<th scope="col">Width</th>
-				<th scope="col">Height</th>
-			</thead>
-			<tbody>
-				<td>{{ found_map.id }}</td>
-				<td>{{ found_map.name }}</td>
-				<td>{{ found_map.width }}</td>
-				<td>{{ found_map.height }}</td>
-			</tbody>
-		</table>
-		<div class="container" style="padding-top:10px;padding-bottom:10px;">
-			<div class="row">
+
+		<div class="tab-pane" id="info" role="tabpanel" aria-labelledby="info-tab">
+		<div class="card card-body">
+			<form method="POST" action="{{ url_for('map_edit', map_id = found_map.id) }}" class="needs-validation" novalidate>
+				<div class="form-group row">
+					<label for="new_name_field" class="col-sm-2 col-form-label">Name</label>
+					<div class="col-sm-4">
+					{% if not edit_perm %}
+						<input type="text" class="form-control-plaintext" id="new_name_field" name="name" value="{{ found_map.name }}" required readonly>
+					{% else %}
+						<input type="text" class="form-control" id="new_name_field" name="name" value="{{ found_map.name }}" required>
+					{% endif %}
+					<div class="invalid-feedback">
+					This field is required
+					</div>
+					</div>
+				</div>
+				<div class="form-group row">
+					<label for="new_width_field" class="col-sm-2 col-form-label">Width</label>
+					<div class="col-sm-4">
+					{% if not edit_perm %}
+						<input type="text" min="1" max="20" class="form-control-plaintext" id="new_width_field" name="width" value="{{ found_map.width }}" required readonly>
+					{% else %}
+						<input type="number" min="1" max="20" class="form-control" id="new_width_field" name="width" value="{{ found_map.width }}" required>
+					{% endif %}
+					<div class="invalid-feedback">
+					Width and height should be integers between 1 and 20
+					</div>
+					</div>
+				</div>
+				<div class="form-group row">
+					<label for="new_height_field" class="col-sm-2 col-form-label">Height</label>
+					<div class="col-sm-4">
+					{% if not edit_perm %}
+						<input type="text" min="1" max="20" class="form-control-plaintext" id="new_height_field" name="height" value="{{ found_map.height }}" required readonly>
+					{% else %}
+						<input type="number" min="1" max="20" class="form-control" id="new_height_field" name="height" value="{{ found_map.height }}" required>
+					{% endif %}
+					<div class="invalid-feedback">
+					Width and height should be integers between 1 and 20
+					</div>
+					</div>
+				</div>
 				{% if edit_perm %}
-					<div class="col" style="text-align:center;">
-						<div style="display:inline-block;">
-							<button type="button" class="btn btn-light" onclick="saveChanges()">Save Map</button>
-						</div>
-					</div>
-
-					<div class="col" style="text-align:center;">
-						<div style="display:inline-block;">
-							<button class="btn btn-light" type="button" data-toggle="collapse" data-target="#collapseEdit" aria-expanded="false" aria-controls="collapseEdit">
-								Edit Information
-							</button>
+					<div class="form-group row">
+						<div class="col-sm-6">
+						<button type="submit" class="btn btn-primary">Modify</button>
 						</div>
 					</div>
 				{% endif %}
-				{% if owner_perm %}
-					<div class="col" style="text-align:center;">
-						<div style="display:inline-block;">
-							<button class="btn btn-light" type="button" data-toggle="collapse" data-target="#collapseShare" aria-expanded="false" aria-controls="collapseShare">
-								Share
-							</button>
+			</form>
+		</div>
+		</div>
+
+
+		<!--           -->
+		<!-- Share tab -->
+		<!--           -->
+
+		{% if owner_permissision %}
+			<div class="tab-pane" id="share" role="tabpanel" aria-labelledby="share-tab">
+			<div class="card card-body">
+				<div class="card-deck">
+					<div class="card text-center">
+						<div class="card-body">
+						<h5 class="card-title">Users with view permission</h5>
+						<div class="row">
+						{% for usr in view_perm_users %}
+							<div class="col-sm-2 p-2 bd-highlight border rounded" id="{{usr.id}}" role="alert">
+								<a href="/">{{usr.username}}</a>
+								<button type="button" class="close" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+						{% endfor %}
+						</div>
+						</div>
+
+						<div class="card-footer text-muted">
+							<form class="form-inline" onsubmit="return false;">
+								<div class="form-group mx-sm-2 mb-2">
+									<label for="editShareTo" class="sr-only">username</label>
+									<input type="text" class="form-control" id="editShareTo" placeholder="username">
+								</div>
+								<button type="submit" value="shareView" class="btn btn-primary mb-2">Add user</button>
+							</form>
 						</div>
 					</div>
-					<div class="col" style="text-align:center;">
-						<div style="display:inline-block;">
-							<button class="btn btn-light" type="button" data-toggle="collapse" data-target="#collapseDelete" aria-expanded="false" aria-controls="collapseDelete">
-								Delete
-							</button>
+					<div class="card text-center">
+						<div class="card-body">
+						<h5 class="card-title">Users with edit permission</h5>
+						<div class="row">
+						{% for usr in edit_perm_users %}
+							<div class="col-sm-2 p-2 bd-highlight border rounded" id="{{usr.id}}" role="alert">
+								<a href="/">{{usr.username}}</a>
+								<button type="button" class="close" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+						{% endfor %}
+						</div>
+						</div>
+
+						<div class="card-footer text-muted">
+							<form class="form-inline">
+								<div class="form-group mx-sm-2 mb-2">
+									<label for="editShareTo" class="sr-only">username</label>
+									<input type="text" class="form-control" id="editShareTo" placeholder="username">
+								</div>
+								<button type="submit" value="shareEdit" class="btn btn-primary mb-2">Add user</button>
+							</form>
 						</div>
 					</div>
-				{% endif %}
-			</div>
-		</div>
-		{% if edit_perm %}
-			<div class="collapse" id="collapseEdit">
-				<div class="card card-body">
-					<form method="POST" action="{{ url_for('map_edit', map_id = found_map.id) }}">
-						<table class="table">
-							<thead class="thead-light">
-								<th scope="col">{{ form.name.label }}</th>
-								<th scope="col">{{ form.width.label }}</th>
-								<th scope="col">{{ form.height.label}}</th>
-							</thead>
-							<tbody>
-								<tr>
-									<td>
-										{{ form.name }}
-
-										<ul>
-										{% for error in form.name.errors %}
-											<li>{{ error }}</li>
-										{% endfor %}
-										</ul>
-									</td>
-									<td>
-										{{ form.width }}
-
-										<ul>
-										{% for error in form.width.errors %}
-											<li>{{ error }}</li>
-										{% endfor %}
-										</ul>
-									</td>
-									<td>
-										{{ form.height }}
-
-										<ul>
-										{% for error in form.height.errors %}
-											<li>{{ error }}</li>
-										{% endfor %}
-										</ul>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-						<input type="submit" value="Confirm changes"/>
-					</form>
 				</div>
+
+				<div class="card-deck" style="margin-top:50px;">
+					<div class="card">
+						<form method="POST" action="{{ url_for('map_edit_perms_default', map_id = found_map.id) }}">
+							<div class="card-body">
+								<h5 class="card-title">Default permissions</h5>
+								<div class="form-check">
+									<input class="form-check-input" type="radio" name="share_radios" id="share_radio_1" value="all_none">
+									<label class="form-check-label" for="share_radio_1">
+									Hide this map from users it has not been shared to
+									</label>
+								</div>
+								<div class="form-check">
+									<input class="form-check-input" type="radio" name="share_radios" id="share_radio_2" value="all_view">
+									<label class="form-check-label" for="share_radio_2">
+									Allow anyone to view this map
+									</label>
+								</div>
+								<div class="form-check">
+									<input class="form-check-input" type="radio" name="share_radios" id="share_radio_3" value="all_edit">
+									<label class="form-check-label" for="share_radio_3">
+									Allow anyone to edit this map
+									</label>
+								</div>
+							</div>
+							<div class="card-footer text-muted">
+								<button type="submit" class="btn btn-primary">Change default permissions</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
 			</div>
 		{% endif %}
-		{% if owner_perm %}
-			<div class="collapse" id="collapseShare">
-				<div class="card card-body">
-					TODO: private setting and map sharing options here
-				</div>
-			</div>
-			<div class="collapse" id="collapseDelete">
-				<div class="card card-body">
-					Do you really want to delete this map? <b>This action cannot be undone.</b>
-					<form method="POST" action="{{ url_for('map_delete', map_id = found_map.id) }}">
-						<input type="submit" value="Delete"/>
-					</form>
-				</div>
-			</div>
-		{% endif %}
-
-		<!--            -->
-		<!-- Actual map -->
-		<!--            -->
-
-		<div id="hex-grid" class="hex-grid rounded-lg {% if not edit_perm %} read-only {% endif %}" data-w="{{found_map.width}}" data-h="{{found_map.height}}" data-hexes="{{ hexes_str }}">
-			{% for y in range(found_map.height) %}
-				<div class="hex-row">
-					{% for x in range(found_map.width + (y % 2)) %}
-						{% set i = (x+y*(found_map.width + 1)) | string %}
-						{% if not i in hexes %}
-							<div id="{{ x }},{{ y }}" class="hex" onclick="hexClick({{ x }},{{ y }})"></div>
-						{% elif hexes[i] == "1" %}
-							<div id="{{ x }},{{ y }}" class="hex hex-city" onclick="hexClick({{ x }},{{ y }})"></div>
-						{% elif hexes[i] == "2" %}
-							<div id="{{ x }},{{ y }}" class="hex hex-road" onclick="hexClick({{ x }},{{ y }})"></div>
-						{% endif %}
-					{% endfor %}
-				</div>
-			{% endfor %}
 		</div>
+
 		<script src="/static/js/hexgrid.js"></script>
+		<script src="/static/js/bootstrap_forms.js"></script>
 	{% endif %}
 {% endblock %}
