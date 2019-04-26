@@ -17,7 +17,7 @@
 		<li class="nav-item">
 			<a class="nav-link" id="info-tab" data-toggle="pill" href="#info" role="tab" aria-controls="info" aria-selected="false">Information</a>
 		</li>
-		{% if owner_permissions %}
+		{% if owner_perm %}
 			<li class="nav-item">
 				<a class="nav-link" id="share-tab" data-toggle="pill" href="#share" role="tab" aria-controls="share" aria-selected="false">Share</a>
 			</li>
@@ -38,7 +38,7 @@
 		<!--         -->
 
 
-		<div class="tab-pane show active" id="map" role="tabpanel" aria-labelledby="map-tab">
+		<div class="tab-pane show active fade" id="map" role="tabpanel" aria-labelledby="map-tab">
 
 			{% if edit_perm %}
 			<div class="card card-body" style="margin-bottom:10px">
@@ -63,8 +63,21 @@
 			<!-- Actual map -->
 			<!--            -->
 			<div id="hex-grid" class="hex-grid rounded-lg {% if not edit_perm %} read-only {% endif %}" data-w="{{found_map.width}}" data-h="{{found_map.height}}" data-hexes="{{ hexes_str }}">
+				<!-- Top padding -->
+				<div class="hex-row">
+				{% for x in range(2 * found_map.width + 4) %}
+					<div class="hex-filler"></div>
+				{% endfor %}
+				</div>
+
 				{% for y in range(found_map.height) %}
 					<div class="hex-row">
+						<!-- Left padding -->
+						{% if (y % 2 == 0) %}
+							<div class="hex-filler"></div>
+						{% endif %}
+						<div class="hex-filler"></div>
+
 						{% for x in range(found_map.width + (y % 2)) %}
 							{% set i = (x+y*(found_map.width + 1)) | string %}
 							{% if not i in hexes %}
@@ -75,8 +88,21 @@
 								<div id="{{ x }},{{ y }}" class="hex hex-road" onclick="hexClick({{ x }},{{ y }})"></div>
 							{% endif %}
 						{% endfor %}
+
+						<!-- Right padding -->
+						{% if (y % 2 == 0) %}
+							<div class="hex-filler"></div>
+						{% endif %}
+						<div class="hex-filler"></div>
 					</div>
 				{% endfor %}
+
+				<!-- Bottom padding -->
+				<div class="hex-row">
+				{% for x in range(2 * found_map.width + 4) %}
+					<div class="hex-filler"></div>
+				{% endfor %}
+				</div>
 			</div>
 		</div>
 
@@ -86,7 +112,7 @@
 		<!--                 -->
 
 
-		<div class="tab-pane" id="info" role="tabpanel" aria-labelledby="info-tab">
+		<div class="tab-pane fade" id="info" role="tabpanel" aria-labelledby="info-tab">
 		<div class="card card-body">
 			<form method="POST" action="{{ url_for('map_edit', map_id = found_map.id) }}" class="needs-validation" novalidate>
 				<div class="form-group row">
@@ -139,13 +165,13 @@
 		</div>
 		</div>
 
+		{% if owner_perm %}
 
-		<!--           -->
-		<!-- Share tab -->
-		<!--           -->
+			<!--           -->
+			<!-- Share tab -->
+			<!--           -->
 
-		{% if owner_permissision %}
-			<div class="tab-pane" id="share" role="tabpanel" aria-labelledby="share-tab">
+			<div class="tab-pane fade" id="share" role="tabpanel" aria-labelledby="share-tab">
 			<div class="card card-body">
 				<div class="card-deck">
 					<div class="card text-center">
