@@ -6,6 +6,8 @@ from application.perm.models import Perm
 from application.hex.models import Hex
 from application.hex.queries import delete_map_hexes
 from application.map.forms import NewMapForm, EditMapForm
+from application.auth.queries import get_user
+from application.perm.queries import change_perms
 
 def make_new_map(form, account_id):
 	m = Map(form.name.data, form.width.data, form.height.data)
@@ -15,7 +17,7 @@ def make_new_map(form, account_id):
 	# Add perms
 	if account_id:
 		p1 = Perm(account_id, m.id, True, True, True)
-		p2 = Perm(None, m.id, True, False, False) # TODO: set according to "private?" here
+		p2 = Perm(None, m.id, True, False, False) # TODO: set according to "private" here?
 		db.session().add(p1)
 		db.session().add(p2)
 	else:
@@ -48,8 +50,10 @@ def save_map(m, jsn):
 				return False
 			elif int(value) < 1 or int(value) > 2:
 				return False
-	except ValueError:
-		return False; # Value not int
+	except KeyboardInterrupt:
+		raise
+	except:
+		return False;
 
 	# Overwrite data
 	delete_map_hexes(m.id)
@@ -60,4 +64,23 @@ def save_map(m, jsn):
 		db.session().add(h)
 
 	db.session().commit()
+	return True
+
+def change_map_perms(m, jsn):
+	usr = None
+	view_perm = False
+	edit_perm = False
+	try:
+		usr = get_user(jsn["user"])
+		view_perm = (jsn["view_perm"] == 'true')
+		edit_perm = (jsn["edit_perm"] == 'true')
+	except KeyboardInterrupt:
+		raise
+	except:
+		return False;
+
+	if usr == None:
+		return False
+
+	change_perms(m, usr, view_perm, edit_perm)
 	return True

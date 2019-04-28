@@ -41,17 +41,22 @@
 		<div class="tab-pane show active fade" id="map" role="tabpanel" aria-labelledby="map-tab">
 
 			{% if edit_perm %}
-			<div class="card card-body" style="margin-bottom:10px">
+			<div class="card card-body">
 				<div class="container" style="padding-top:10px;padding-bottom:10px;">
 					<div class="row">
 						<div class="col" style="text-align:center;">
 							<div style="display:inline-block;">
-								<button type="button" class="btn btn-light" onclick="saveChanges()">Save Map</button>
+								<button type="button" id="save-button" class="btn btn-light" onclick="saveChanges()" disabled>Save Map</button>
 							</div>
 						</div>
 						<div class="col" style="text-align:center;">
 							<div style="display:inline-block;">
-								<button type="button" class="btn btn-light" onclick="optimize()">Optimize paths</button>
+								<button type="button" class="btn btn-primary" onclick="optimize()">Optimize paths</button>
+							</div>
+						</div>
+						<div class="col" style="text-align:center;">
+							<div style="display:inline-block;">
+								<button type="button" class="btn btn-primary" onclick="clearPaths()">Clear paths</button>
 							</div>
 						</div>
 					</div>
@@ -177,11 +182,11 @@
 					<div class="card text-center">
 						<div class="card-body">
 						<h5 class="card-title">Users with view permission</h5>
-						<div class="row">
+						<div class="row" id="view-perm-users">
 						{% for usr in view_perm_users %}
-							<div class="col-sm-2 p-2 bd-highlight border rounded" id="{{usr.id}}" role="alert">
-								<a href="/">{{usr.username}}</a>
-								<button type="button" class="close" aria-label="Close">
+							<div class="col-sm-3 p-2 bd-highlight border rounded" id="view-perm-{{usr.username}}" role="alert">
+								<a href="javascript:;">{{usr.username}}</a>
+								<button type="button" class="close" onclick="removePerms('{{usr.username}}')" aria-label="Close">
 									<span aria-hidden="true">&times;</span>
 								</button>
 							</div>
@@ -190,23 +195,26 @@
 						</div>
 
 						<div class="card-footer text-muted">
-							<form class="form-inline" onsubmit="return false;">
+							<form class="form-inline" onsubmit="return viewShareSubmit();">
 								<div class="form-group mx-sm-2 mb-2">
-									<label for="editShareTo" class="sr-only">username</label>
-									<input type="text" class="form-control" id="editShareTo" placeholder="username">
+									<label for="viewShareTo" class="sr-only">username</label>
+									<input type="text" class="form-control" id="viewShareTo" placeholder="username">
 								</div>
 								<button type="submit" value="shareView" class="btn btn-primary mb-2">Add user</button>
+								<div class="invalid-feedback">
+									No such user
+								</div>
 							</form>
 						</div>
 					</div>
 					<div class="card text-center">
 						<div class="card-body">
 						<h5 class="card-title">Users with edit permission</h5>
-						<div class="row">
+						<div class="row" id="edit-perm-users">
 						{% for usr in edit_perm_users %}
-							<div class="col-sm-2 p-2 bd-highlight border rounded" id="{{usr.id}}" role="alert">
-								<a href="/">{{usr.username}}</a>
-								<button type="button" class="close" aria-label="Close">
+							<div class="col-sm-3 p-2 bd-highlight border rounded" id="edit-perm-{{usr.username}}" role="alert">
+								<a href="javascript:;">{{usr.username}}</a>
+								<button type="button" class="close" onclick="removePerms('{{usr.username}}')" aria-label="Close">
 									<span aria-hidden="true">&times;</span>
 								</button>
 							</div>
@@ -215,12 +223,15 @@
 						</div>
 
 						<div class="card-footer text-muted">
-							<form class="form-inline">
+							<form class="form-inline" onsubmit="return editShareSubmit()">
 								<div class="form-group mx-sm-2 mb-2">
 									<label for="editShareTo" class="sr-only">username</label>
 									<input type="text" class="form-control" id="editShareTo" placeholder="username">
 								</div>
 								<button type="submit" value="shareEdit" class="btn btn-primary mb-2">Add user</button>
+								<div class="invalid-feedback">
+									No such user
+								</div>
 							</form>
 						</div>
 					</div>
@@ -262,6 +273,7 @@
 		</div>
 
 		<script src="/static/js/hexgrid.js"></script>
+		<script src="/static/js/share_perms.js"></script>
 		<script src="/static/js/bootstrap_forms.js"></script>
 	{% endif %}
 {% endblock %}

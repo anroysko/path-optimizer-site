@@ -10,7 +10,7 @@ from application.hex.models import Hex
 from application.map.forms import NewMapForm, EditMapForm, SearchMapForm
 from application.perm.queries import get_account_map_perms, get_map_accounts
 from application.hex.queries import get_map_hexes, build_hex_map
-from application.map.queries import make_new_map, edit_map, delete_map, save_map
+from application.map.queries import make_new_map, edit_map, delete_map, save_map, change_map_perms
 from sqlalchemy import update
 import json
 
@@ -103,7 +103,7 @@ def map_save(map_id):
 	if fail:
 		abort(400) # Failure due to bad request
 	else:
-		return redirect("/map/" + str(m.id))
+		return ('', 204) # Success
 
 @app.route("/map/<map_id>/edit_perms/default", methods=["POST"])
 def map_edit_perms_default(map_id):
@@ -123,3 +123,17 @@ def map_edit_perms_default(map_id):
 	#else:
 	return redirect("/map/" + str(m.id))
 
+@app.route("/map/<map_id>/edit_perms", methods=["POST"])
+def map_edit_perms(map_id):
+	m = Map.query.get(map_id)
+	if m == None:
+		abort(404)
+	view_perm, edit_perm, owner_perm = get_account_map_perms(current_user.get_id(), map_id)
+	if not owner_perm:
+		return login_manager.unauthorized()
+
+	fail = not change_map_perms(m, request.get_json())
+	if fail:
+		abort(400) # Failure due to bad request
+	else:
+		return ('', 204) # Success

@@ -49,3 +49,16 @@ def get_map_accounts(map_id, view_perm, edit_perm):
 def get_all_map_perms(map_id):
 	q = text("SELECT Perm.* FROM PERM WHERE Perm.map_id = :mi")
 	return db.engine.execute(q, mi = map_id).fetchall()
+
+def change_perms(m, usr, view_perm, edit_perm):
+	perm = Perm.query.filter(Perm.map_id == m.id, Perm.account_id == usr.id).first()
+	if perm == None:
+		# Create a new perm
+		print("!!!!!!!!!!! CREATE NEW PERM")
+		new_perm = Perm(usr.id, m.id, view_perm, edit_perm, False)
+		db.session().add(new_perm)
+	else:
+		print("!!!!!!!!!!! CHANGE PERM " + str(perm.id) + " PERMS!")
+		perm.view_perm = view_perm
+		perm.edit_perm = edit_perm
+	db.session().commit()
