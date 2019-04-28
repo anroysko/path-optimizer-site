@@ -1,14 +1,5 @@
 "use strict";
 
-/*
-<div class="col-sm-3 p-2 bd-highlight border rounded" id="view-perm-{{usr.username}}" role="alert">
-	<a href="javascript:;">{{usr.username}}</a>
-	<button type="button" class="close" onclick="removePerms('{{usr.username}}')" aria-label="Close">
-		<span aria-hidden="true">&times;</span>
-	</button>
-</div>
-*/
-
 function buildPermBox(usr, perm) {
 	var container = document.createElement("div");
 	container.setAttribute("class", "col-sm-3 p-2 bd-highlight border rounded");
@@ -17,12 +8,15 @@ function buildPermBox(usr, perm) {
 
 	var link = document.createElement("a");
 	link.setAttribute("href", "javascript:;");
-	link.innerHTML = usr; // hopefully there's nothing evil in there
-	
+	link.innerHTML = usr;
+
+	// nothing bad can really happen here since the user has to write out the string "usr" themselves, and
+	// additionally, to get here, it must be a valid username. It's not my bad if you shoot yourself in the foot.	
+
 	var button = document.createElement("button");
 	button.setAttribute("type", "button");
 	button.setAttribute("class", "close");
-	button.setAttribute("onclick", "removePerms('" + usr + "')"); // again, better hope nothing bad happens here
+	button.setAttribute("onclick", "removePerms('" + usr + "')");
 	button.setAttribute("aria-label", "Close");
 	button.innerHTML = "<span aria-hidden='true'>&times;</span>";
 	
@@ -58,7 +52,6 @@ function updateHTML(usr, vp, ep) {
 		addEditPermBox(usr);
 	}
 }
-
 
 function changePerms(usr, vp, ep, delayed) {
 	const base_url = window.location.href;
