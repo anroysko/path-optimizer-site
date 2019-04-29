@@ -97,7 +97,7 @@ function optimize() {
 
 	var state = getHexgridJsonState();
 	const ini_cou = getCounts(w, h, state);
-	alert("Optimization successful!\nTime taken: 13s\nRoads added: 3\nTotal roads: " + ini_cou[2]);
+	alert("This button doesn't currently do anything.\nEnjoy some stats instead!\nEmpty hexes: " + ini_cou[0] + "\nCities: " + ini_cou[1] + "\nRoads: " + ini_cou[2]);
 }
 
 function getSaveButton() {

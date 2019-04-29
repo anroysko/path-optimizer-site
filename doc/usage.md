@@ -24,30 +24,64 @@ In the "Search for a map" spoiler, you can input the ID of the map you want to s
 and then click search to search for it. Note that the map you are trying to view might not
 exist or be visible to you.
 
+If you are logged in, you can also see two cards, the left one displaying your maps, and the right one displaying maps shared to you.
+
+## Register page
+Write in your username and password. You must have a unique username. Passwords are hashed server-side.
+
+## Login page
+Login with your username and password here
+
 ## View map screen
 
-Here you can see the details of the map, and edit it. There are four buttons,
-and a hex grid (currently consisting of squares) representing the map. The four buttons are
+This page has three tabs:
 
-* Save Map
+* Map
 
-* Edit Information
+* Information
 
 * Share
 
-* Delete
+If you do not have view permission on the particular map, you instead see a large message
+"The map doesn't exist, or is private and you do not have permissions to view it."
 
-Save map saves changes made to the hex grid. Edit information opens a spoiler where the name
-and dimensions of the map can be changed. Share opens a spoiler giving information
-on how to share the map, and Delete reveals another button, which deletes the map.
+### Map-tab
+The Map-tab is always visible, and displays the map. If you have edit permission, there are three buttons
 
-By clicking a hex in the the hex (square) grid, it's color changes. There colors are temporary
-representations for hexes with cities, roads and nothing. Clicking the hex rotates its type
-in the rotation nothing -> city -> road -> nothing. You can save changes by clicking the
-"Save Map"-button. If you try to leave the page with unsaved changes, the site will ask you if
-you really wish to do that.
+* Save map
 
-Note that you might not have rights to edit a specific map, in which case none of the four buttons
-exists, and requests that would be made by those buttons get refused. You might also have edit
-permissions but not owner permissions, in which case you can save and edit the map, but not share
-or delete it.
+* Optimize
+
+* Clear Paths
+
+And a hex grid. If you do not have edit permission, the three buttons are not visible, and there
+is a dark overlay over the hex grid.
+
+You can click on any hex in the grid to switch its state in the cycle empty -> city -> road -> empty.
+Clicking "Save Map" saves your changes. "Optimize" adds the minimum number of roads required to
+connect all cities. "Clear Paths" clears all paths from the map.
+
+### Information-tab
+The Information-tab displays the name, width and height of the map. If you have edit permission on the map,
+you can additionally edit these values.
+
+### Share-tab
+The share tab is only visible if you are the owner of the map.
+In the share-tab you can share the map to other registered users, and configure what permissions unregistered users have.
+There are three cards
+
+* Users with view permission (but not edit permission)
+
+* Users with edit permission
+
+* Default permissions
+
+In the first card, you can add view permissions to some user. If the user doesn't exist, currently nothing happens. Otherwise,
+their permission level is set to view permission. If they previously had edit permission, they lose it. You should see their username
+appear in the main body of the card.
+To remove view permissions from users, click on the "x" next to their username in the main body
+
+The edit permision card works similarly, except that it modifies whether the user has edit permission (and consequently view permission)
+instead of just view permission.
+
+In the default permissions card, you can select what permissions unregistered users have on the map
