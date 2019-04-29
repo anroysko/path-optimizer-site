@@ -30,11 +30,15 @@ def map_view(map_id):
 	jsn = build_hex_map(m)
 
 	# Load accounts with perms on the map
-	view_perm_users = get_map_accounts(map_id, True, False)
-	edit_perm_users = get_map_accounts(map_id, True, True)
+	view_perm_users = get_map_accounts(map_id, True, False, False)
+	edit_perm_users = get_map_accounts(map_id, True, True, False)
+
+	# Get default perms
+	default_view_perm, default_edit_perm, default_owner_perm = get_account_map_perms(None, map_id)
+	default_perm_level = int(default_view_perm) + int(default_edit_perm) + int(default_owner_perm)
 
 	# Serve the map
-	return render_template("map/map.html", found_map = m, hexes = jsn, hexes_str = json.dumps(jsn), view_perm=view_perm, edit_perm=edit_perm, owner_perm=owner_perm, view_perm_users=view_perm_users, edit_perm_users=edit_perm_users, form = EditMapForm())
+	return render_template("map/map.html", found_map = m, hexes = jsn, hexes_str = json.dumps(jsn), view_perm=view_perm, edit_perm=edit_perm, owner_perm=owner_perm, view_perm_users=view_perm_users, edit_perm_users=edit_perm_users, default_perm_level = default_perm_level, form = EditMapForm())
 
 @app.route("/map/new/", methods=["POST"])
 def map_new():
@@ -61,7 +65,7 @@ def map_edit(map_id):
 	# Check that the form is valid
 	form = EditMapForm(request.form)
 	if not form.validate():
-		return redirect("/map/" + str(m.id))
+		abort(400) # Bad request
 
 	# Edit the map
 	m = edit_map(m, form)
@@ -71,9 +75,8 @@ def map_edit(map_id):
 def map_search():
 	form = SearchMapForm(request.form)
 	if not form.validate():
-		return redirect("/")
-	else:
-		return redirect("/map/" + str(form.map_id.data))
+		abort(400) # Bad request
+	return redirect("/map/" + str(form.map_id.data))
 
 @app.route("/map/<map_id>/delete", methods=["POST"])
 def map_delete(map_id):
@@ -101,27 +104,9 @@ def map_save(map_id):
 
 	fail = not save_map(m, request.get_json())
 	if fail:
-		abort(400) # Failure due to bad request
+		abort(400) # Bad request
 	else:
 		return ('', 204) # Success
-
-@app.route("/map/<map_id>/edit_perms/default", methods=["POST"])
-def map_edit_perms_default(map_id):
-	# Check that the map is valid and user has permission to modify it
-	m = Map.query.get(map_id)
-	if m == None:
-		abort(404)
-
-	view_perm, edit_perm, owner_perm = get_account_map_perms(current_user.get_id(), map_id)
-	if not owner_perm:
-		return login_manager.unauthorized()
-
-	# Process more stuff here
-	#fail = not save_map(m, request.get_json())
-	#if fail:
-	#	abort(400) # Failure due to bad request
-	#else:
-	return redirect("/map/" + str(m.id))
 
 @app.route("/map/<map_id>/edit_perms", methods=["POST"])
 def map_edit_perms(map_id):
@@ -135,5 +120,4 @@ def map_edit_perms(map_id):
 	fail = not change_map_perms(m, request.get_json())
 	if fail:
 		abort(400) # Failure due to bad request
-	else:
-		return ('', 204) # Success
+	return ('', 204) # Success

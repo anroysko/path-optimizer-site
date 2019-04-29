@@ -71,16 +71,18 @@ def change_map_perms(m, jsn):
 	view_perm = False
 	edit_perm = False
 	try:
-		usr = get_user(jsn["user"])
+		if jsn["user"]:
+			usr = get_user(jsn["user"])
+			if usr == None:
+				return False
 		view_perm = (jsn["view_perm"] == 'true')
 		edit_perm = (jsn["edit_perm"] == 'true')
 	except KeyboardInterrupt:
 		raise
 	except:
-		return False;
-
-	if usr == None:
 		return False
 
-	change_perms(m, usr, view_perm, edit_perm)
+	if not change_perms(m, usr, view_perm, edit_perm):
+		return False
+
 	return True

@@ -86,7 +86,9 @@ function viewShareSubmit() {
 	const usr = field.value;
 	field.value = "";
 	
-	changePerms(usr, true, false, true);
+	if (usr) {
+		changePerms(usr, true, false, true);
+	}
 	return false;
 }
 
@@ -95,6 +97,19 @@ function editShareSubmit() {
 	const usr = field.value;
 	field.value = "";
 	
-	changePerms(usr, true, true, true);
+	if (usr) {
+		changePerms(usr, true, true, true);
+	}
+	return false;
+}
+
+function changeDefaultPerms() {
+	if (document.getElementById('shareRadioNone').checked) {
+		changePerms("", false, false, false)
+	} else if (document.getElementById('shareRadioView').checked) {
+		changePerms("", true, false, false)
+	} else if (document.getElementById('shareRadioEdit').checked) {
+		changePerms("", true, true, false)
+	}
 	return false;
 }

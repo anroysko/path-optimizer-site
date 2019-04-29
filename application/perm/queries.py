@@ -36,29 +36,31 @@ def get_shared_maps(account_id):
 	return db.engine.execute(q, i = account_id).fetchall()
 
 # Get all accounts with the given perms on the map
-def get_map_accounts(map_id, view_perm, edit_perm):
+def get_map_accounts(map_id, view_perm, edit_perm, owner_perm):
 	q = text("SELECT Account.*"
 		" FROM ACCOUNT"
 		" LEFT JOIN PERM"
 		" ON Perm.account_id = Account.id"
-		" WHERE (Perm.view_perm = :i AND Perm.edit_perm = :j AND Perm.map_id = :mi)"
+		" WHERE (Perm.view_perm = :i AND Perm.edit_perm = :j AND Perm.owner_perm = :k AND Perm.map_id = :mi)"
 		" GROUP BY Account.id"
 		" HAVING COUNT(Perm.id) > 0")
-	return db.engine.execute(q, i = view_perm, j = edit_perm, mi = map_id).fetchall()
-
-def get_all_map_perms(map_id):
-	q = text("SELECT Perm.* FROM PERM WHERE Perm.map_id = :mi")
-	return db.engine.execute(q, mi = map_id).fetchall()
+	return db.engine.execute(q, i = view_perm, j = edit_perm, k = owner_perm, mi = map_id).fetchall()
 
 def change_perms(m, usr, view_perm, edit_perm):
-	perm = Perm.query.filter(Perm.map_id == m.id, Perm.account_id == usr.id).first()
+	usr_id = None
+	if usr != None:
+		usr_id = usr.id
+
+	perm = Perm.query.filter(Perm.map_id == m.id, Perm.account_id == usr_id).first()
 	if perm == None:
 		# Create a new perm
-		print("!!!!!!!!!!! CREATE NEW PERM")
 		new_perm = Perm(usr.id, m.id, view_perm, edit_perm, False)
 		db.session().add(new_perm)
 	else:
-		print("!!!!!!!!!!! CHANGE PERM " + str(perm.id) + " PERMS!")
+		if perm.owner_perm:
+			return False; # Cannot change permissions of the owner
 		perm.view_perm = view_perm
 		perm.edit_perm = edit_perm
+
 	db.session().commit()
+	return True;

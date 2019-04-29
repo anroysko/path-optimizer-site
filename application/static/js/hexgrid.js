@@ -137,7 +137,7 @@ function saveChanges() {
 	xhr.send(JSON.stringify(getHexgridJsonState()));
 	xhr.onreadystatechange = function() {
 		if (xhr.readyState == 4) {
-			if (xhr.status == 200) {
+			if (xhr.status == 204) {
 				// Successful save, remove warning about leaving with unsaved changes
 				disableButton(getSaveButton());
 			} else if (xhr.status == 404) {

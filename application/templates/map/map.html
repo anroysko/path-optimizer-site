@@ -178,9 +178,10 @@
 
 			<div class="tab-pane fade" id="share" role="tabpanel" aria-labelledby="share-tab">
 			<div class="card card-body">
+				<!-- TODO: invalid feedback currently never shows up -->
 				<div class="card-deck">
-					<div class="card text-center">
-						<div class="card-body">
+					<div class="card">
+						<div class="card-body text-center">
 						<h5 class="card-title">Users with view permission</h5>
 						<div class="row" id="view-perm-users">
 						{% for usr in view_perm_users %}
@@ -199,16 +200,16 @@
 								<div class="form-group mx-sm-2 mb-2">
 									<label for="viewShareTo" class="sr-only">username</label>
 									<input type="text" class="form-control" id="viewShareTo" placeholder="username">
+									<div class="invalid-feedback">
+										No such user
+									</div>
 								</div>
 								<button type="submit" value="shareView" class="btn btn-primary mb-2">Add user</button>
-								<div class="invalid-feedback">
-									No such user
-								</div>
 							</form>
 						</div>
 					</div>
-					<div class="card text-center">
-						<div class="card-body">
+					<div class="card">
+						<div class="card-body text-center">
 						<h5 class="card-title">Users with edit permission</h5>
 						<div class="row" id="edit-perm-users">
 						{% for usr in edit_perm_users %}
@@ -223,40 +224,42 @@
 						</div>
 
 						<div class="card-footer text-muted">
-							<form class="form-inline" onsubmit="return editShareSubmit()">
+							<form class="form-inline" onsubmit="return editShareSubmit();">
 								<div class="form-group mx-sm-2 mb-2">
 									<label for="editShareTo" class="sr-only">username</label>
 									<input type="text" class="form-control" id="editShareTo" placeholder="username">
+									<div class="invalid-feedback">
+										No such user
+									</div>
 								</div>
 								<button type="submit" value="shareEdit" class="btn btn-primary mb-2">Add user</button>
-								<div class="invalid-feedback">
-									No such user
-								</div>
 							</form>
 						</div>
 					</div>
 				</div>
 
+				<!-- This checkbox solution doesn't seem to fully work, if you refresh the page, -->
+				<!-- the last selected checkbox remains selected over the checkbox indicating currently active option. -->
 				<div class="card-deck" style="margin-top:50px;">
 					<div class="card">
-						<form method="POST" action="{{ url_for('map_edit_perms_default', map_id = found_map.id) }}">
+						<form onsubmit="return changeDefaultPerms()">
 							<div class="card-body">
 								<h5 class="card-title">Default permissions</h5>
 								<div class="form-check">
-									<input class="form-check-input" type="radio" name="share_radios" id="share_radio_1" value="all_none">
-									<label class="form-check-label" for="share_radio_1">
+									<input class="form-check-input" type="radio" name="share_radios" id="shareRadioNone" {% if default_perm_level == 0 %} checked {% endif %}>
+									<label class="form-check-label" for="shareRadioNone">
 									Hide this map from users it has not been shared to
 									</label>
 								</div>
 								<div class="form-check">
-									<input class="form-check-input" type="radio" name="share_radios" id="share_radio_2" value="all_view">
-									<label class="form-check-label" for="share_radio_2">
+									<input class="form-check-input" type="radio" name="share_radios" id="shareRadioView" {% if default_perm_level == 1 %} checked {% endif %}>
+									<label class="form-check-label" for="shareRadioView">
 									Allow anyone to view this map
 									</label>
 								</div>
 								<div class="form-check">
-									<input class="form-check-input" type="radio" name="share_radios" id="share_radio_3" value="all_edit">
-									<label class="form-check-label" for="share_radio_3">
+									<input class="form-check-input" type="radio" name="share_radios" id="shareRadioEdit" {% if default_perm_level == 2 %} checked {% endif %}>
+									<label class="form-check-label" for="shareRadioEdit">
 									Allow anyone to edit this map
 									</label>
 								</div>
