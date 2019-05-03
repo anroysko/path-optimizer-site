@@ -10,6 +10,33 @@ function getHexgridJsonState() {
 	return JSON.parse(dts.hexes);
 }
 
+function getSaveButton() {
+	return document.getElementById("save-button")
+}
+
+function enableButton(el) {
+	el.disabled = false;
+
+	var list = el.classList;
+	list.remove('btn-light');
+	list.add('btn-primary');
+
+	window.onbeforeunload = function() {
+		return true;
+	}
+}
+
+function disableButton(el) {
+	el.disabled = true;
+	el.blur(); // Remove outline
+
+	var list = el.classList;
+	list.remove('btn-primary');
+	list.add('btn-light');
+	
+	window.onbeforeunload = null;
+}
+
 function nextState(v) {
 	if (v === undefined) return "1";
 	else if (v === "1") return "2";
@@ -128,23 +155,6 @@ function buildEdges(w, h) {
 		}
 	}
 	return edges;
-}
-
-function printInd(i) {
-	const x = i % 11;
-	const y = Math.floor(i / 11);
-	console.log("(" + x + "," + y + ")");
-}
-
-function printMask(mask) {
-	var res = [];
-	for (var j = 0; (1<<j) <= mask; ++j) {
-		if (mask & (1<<j)) {
-			res.push(j);
-		}
-	}
-	console.log("mask " + mask + ": ");
-	console.log(res);
 }
 
 // Builds path from the given node to any position where the mask tree breaks
@@ -280,7 +290,6 @@ function solve(w, h, data_array) {
 		// Save the DP and continue
 		dp.push(dists);
 	}
-	console.log("min added roads: " + dp[mm-1][city_is[k-1]]);
 
 	// Construct solution from the DP
 	var visited = [];
@@ -290,11 +299,6 @@ function solve(w, h, data_array) {
 			row.push(false);
 		}
 		visited.push(row);
-	}
-
-	console.log("city locations:");
-	for (var j = 0; j < k; ++j) {
-		printInd(city_is[j]);
 	}
 
 	const start_ind = city_is[k-1];
@@ -369,31 +373,6 @@ function optimize() {
 	enableButton(getSaveButton());
 }
 
-function getSaveButton() {
-	return document.getElementById("save-button")
-}
-
-function enableButton(el) {
-	el.disabled = false;
-
-	var list = el.classList;
-	list.remove('btn-light');
-	list.add('btn-primary');
-
-	window.onbeforeunload = function() {
-		return true;
-	}
-}
-function disableButton(el) {
-	el.disabled = true;
-	el.blur(); // Remove outline
-
-	var list = el.classList;
-	list.remove('btn-primary');
-	list.add('btn-light');
-	
-	window.onbeforeunload = null;
-}
 
 function saveChanges() {
 	const base_url = window.location.href
