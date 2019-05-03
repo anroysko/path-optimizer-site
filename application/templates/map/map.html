@@ -200,12 +200,12 @@
 								<div class="form-group mx-sm-2 mb-2">
 									<label for="viewShareTo" class="sr-only">username</label>
 									<input type="text" class="form-control" id="viewShareTo" placeholder="username">
-									<div class="invalid-feedback">
-										No such user
-									</div>
 								</div>
 								<button type="submit" value="shareView" class="btn btn-primary mb-2">Add user</button>
 							</form>
+							<div class="alert alert-danger col-sm-6" style="margin-left: 10px; display:none;" role="alert" id="view-feedback">
+								No such user
+							</div>
 						</div>
 					</div>
 					<div class="card">
@@ -228,12 +228,12 @@
 								<div class="form-group mx-sm-2 mb-2">
 									<label for="editShareTo" class="sr-only">username</label>
 									<input type="text" class="form-control" id="editShareTo" placeholder="username">
-									<div class="invalid-feedback">
-										No such user
-									</div>
 								</div>
 								<button type="submit" value="shareEdit" class="btn btn-primary mb-2">Add user</button>
 							</form>
+							<div class="alert alert-danger col-sm-6" style="margin-left: 10px; display:none;" role="alert" id="edit-feedback">
+								No such user
+							</div>
 						</div>
 					</div>
 				</div>
@@ -246,26 +246,28 @@
 							<div class="card-body">
 								<h5 class="card-title">Default permissions</h5>
 								<div class="form-check">
-									<input class="form-check-input" type="radio" name="share_radios" id="shareRadioNone" {% if default_perm_level == 0 %} checked {% endif %}>
+									<input class="form-check-input" type="radio" name="share_radios" id="shareRadioNone" onclick="enableDefaultButton()" {% if default_perm_level == 0 %} checked {% endif %}>
 									<label class="form-check-label" for="shareRadioNone">
 									Hide this map from users it has not been shared to
 									</label>
 								</div>
 								<div class="form-check">
-									<input class="form-check-input" type="radio" name="share_radios" id="shareRadioView" {% if default_perm_level == 1 %} checked {% endif %}>
+									<input class="form-check-input" type="radio" name="share_radios" id="shareRadioView" onclick="enableDefaultButton()" {% if default_perm_level == 1 %} checked {% endif %}>
 									<label class="form-check-label" for="shareRadioView">
 									Allow anyone to view this map
 									</label>
 								</div>
 								<div class="form-check">
-									<input class="form-check-input" type="radio" name="share_radios" id="shareRadioEdit" {% if default_perm_level == 2 %} checked {% endif %}>
+									<input class="form-check-input" type="radio" name="share_radios" id="shareRadioEdit" onclick="enableDefaultButton()" {% if default_perm_level == 2 %} checked {% endif %}>
 									<label class="form-check-label" for="shareRadioEdit">
 									Allow anyone to edit this map
 									</label>
 								</div>
 							</div>
 							<div class="card-footer text-muted">
-								<button type="submit" class="btn btn-primary">Change default permissions</button>
+								<div style="display:inline-block;">
+									<button type="submit" id="default-perm-button" class="btn btn-light" disabled>Change default permissions</button>
+								</div>
 							</div>
 						</form>
 					</div>

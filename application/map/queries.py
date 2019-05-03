@@ -17,11 +17,11 @@ def make_new_map(form, account_id):
 	# Add perms
 	if account_id:
 		p1 = Perm(account_id, m.id, True, True, True)
-		p2 = Perm(None, m.id, True, False, False) # TODO: set according to "private" here?
+		p2 = Perm(None, m.id, False, False, False)
 		db.session().add(p1)
 		db.session().add(p2)
 	else:
-		p1 = Perm(None, m.id, True, True, True)
+		p1 = Perm(None, m.id, True, True, False)
 		db.session().add(p1)
 	db.session().commit()
 

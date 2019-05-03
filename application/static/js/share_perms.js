@@ -1,5 +1,31 @@
 "use strict";
 
+function showError(perm) {
+	document.getElementById(perm + "-feedback").style.display = 'block';
+}
+function hideError(perm) {
+	document.getElementById(perm + "-feedback").style.display = 'none';
+}
+function enableDefaultButton() {
+	var el = document.getElementById("default-perm-button");
+	el.disabled = false;
+
+	var list = el.classList;
+	list.remove('btn-light');
+	list.add('btn-primary');
+}
+
+function disableDefaultButton() {
+	var el = document.getElementById("default-perm-button");
+	el.disabled = true;
+	el.blur(); // Remove outline
+
+	var list = el.classList;
+	list.remove('btn-primary');
+	list.add('btn-light');
+}
+
+
 function buildPermBox(usr, perm) {
 	var container = document.createElement("div");
 	container.setAttribute("class", "col-sm-3 p-2 bd-highlight border rounded");
@@ -67,9 +93,13 @@ function changePerms(usr, vp, ep, delayed) {
 			if (xhr.status == 204) {
 				if (delayed) {
 					updateHTML(usr, vp, ep);
+					hideError(ep ? "edit" : "view");
 				}
 				console.log("Successfully changed perms for user=" + usr + ", view_perm=" + vp + ", edit_perm=" + ep);
 			} else {
+				if (delayed) {
+					showError(ep ? "edit" : "view");
+				}
 				console.log("Failed to change perms (" + xhr.status + ") for user=" + usr + ", view_perm=" + vp + ", edit_perm=" + ep);
 			}
 		}
@@ -104,6 +134,7 @@ function editShareSubmit() {
 }
 
 function changeDefaultPerms() {
+	disableDefaultButton();
 	if (document.getElementById('shareRadioNone').checked) {
 		changePerms("", false, false, false)
 	} else if (document.getElementById('shareRadioView').checked) {
