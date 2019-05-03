@@ -62,7 +62,6 @@ function clearPaths() {
 	var clear_list = [];
 	for (var key in state) {
 		if (state[key] == "2") {
-			console.log("key: " + key);
 			clear_list.push(parseInt(key));
 		}
 	}
@@ -70,7 +69,6 @@ function clearPaths() {
 		const i = clear_list[j];
 		const x = i % (w+1);
 		const y = Math.floor(i / (w+1));
-		console.log("" + i + "," + x + "," + y);
 		setHexState(x, y, i, undefined, state);
 	}
 
@@ -78,26 +76,8 @@ function clearPaths() {
 	enableButton(getSaveButton());
 }
 
-function solve(w, h, data_array) {
-	// Let k be the number of cities, and n=w*h Then this is O(3^k n + 2^k n^2)
-	var k = 0;
-	var city_xs = [];
-	var city_ys = [];
-	var city_is = [];
-	for (var y = 0; y < h; ++y) {
-		for (var x = 0; x <= w; ++x) {
-			const i = x + y * (w+1);
-			if (data_array[i] == 1) {
-				++k;
-				city_xs.push(x);
-				city_ys.push(y);
-				city_is.push(i);
-			}
-		}
-	}
-	if (k == 1) return data_array; // No changes required
-
-	var edges = [];
+function buildEdges(w, h) {
+	var edges = []
 	for (var y = 0; y < h; ++y) {
 		for (var x = 0; x <= w; ++x) {
 			const i = x + y * (w+1);
@@ -147,6 +127,91 @@ function solve(w, h, data_array) {
 			edges.push(targets);
 		}
 	}
+	return edges;
+}
+
+function printInd(i) {
+	const x = i % 11;
+	const y = Math.floor(i / 11);
+	console.log("(" + x + "," + y + ")");
+}
+
+function printMask(mask) {
+	var res = [];
+	for (var j = 0; (1<<j) <= mask; ++j) {
+		if (mask & (1<<j)) {
+			res.push(j);
+		}
+	}
+	console.log("mask " + mask + ": ");
+	console.log(res);
+}
+
+// Builds path from the given node to any position where the mask tree breaks
+// Returns true if it made any progress. This is to prevent going back-and-forth in a road piece
+function buildPaths(i, mask, visited, edges, data_array, dp) {
+	visited[mask][i] = true;
+	if (dp[mask][i] == 0) return true; // base case
+
+	// Test if we can split here
+	const node_cost = (data_array[i] == 0 ? 1 : 0);
+	var splitmask = -1;
+	for (var submask = mask; submask != 0; submask = (submask - 1) & mask) {
+		const invmask = mask ^ submask;
+		if (invmask == 0) {
+			continue;
+		}
+		if (dp[submask][i] + dp[invmask][i] - node_cost == dp[mask][i]) {
+			splitmask = submask;
+		}
+	}
+	if (splitmask != -1) {
+		// Split into multiple subtrees
+		const submask = splitmask;
+		const invmask = mask ^ submask;
+
+		buildPaths(i, submask, visited, edges, data_array, dp);
+		buildPaths(i, invmask, visited, edges, data_array, dp);
+		return true;
+	} else {
+		// Find next node on the path
+		var nxt = -1;
+		for (var ti = 0; ti < edges[i].length; ++ti) {
+			const t = edges[i][ti];
+			if (visited[mask][t]) {
+				continue;
+			}
+			if (dp[mask][t] + node_cost == dp[mask][i]) {
+				const ret = buildPaths(t, mask, visited, edges, data_array, dp);
+				if (ret) {
+					return true;
+				}
+			}
+		}
+		return false; // Can no longer reach anywhere
+	}
+}
+
+function solve(w, h, data_array) {
+	// Let k be the number of cities, and n=w*h Then this is O(3^k n + 2^k n^2)
+	var k = 0;
+	var city_xs = [];
+	var city_ys = [];
+	var city_is = [];
+	for (var y = 0; y < h; ++y) {
+		for (var x = 0; x <= w; ++x) {
+			const i = x + y * (w+1);
+			if (data_array[i] == 1) {
+				++k;
+				city_xs.push(x);
+				city_ys.push(y);
+				city_is.push(i);
+			}
+		}
+	}
+	if (k == 1) return data_array; // No changes required
+
+	var edges = buildEdges(w, h);
 
 	const mm = 1 << (k-1);
 	const mi = (w+1)*h;
@@ -215,19 +280,45 @@ function solve(w, h, data_array) {
 		// Save the DP and continue
 		dp.push(dists);
 	}
-	alert("min added roads: " + dp[mm-1][city_is[k-1]]);
-
-	// Build the solution
-	/*
-	var state = []
-	for (var i = 0; i < mi; ++i) {
-		state.push(data_array[i]);
-	}
-	for (
-
 	console.log("min added roads: " + dp[mm-1][city_is[k-1]]);
-	*/
-	return;
+
+	// Construct solution from the DP
+	var visited = [];
+	for (var mask = 0; mask < mm; ++mask) {
+		var row = [];
+		for (var i = 0; i < mi; ++i) {
+			row.push(false);
+		}
+		visited.push(row);
+	}
+
+	console.log("city locations:");
+	for (var j = 0; j < k; ++j) {
+		printInd(city_is[j]);
+	}
+
+	const start_ind = city_is[k-1];
+	buildPaths(start_ind, mm-1, visited, edges, data_array, dp);
+
+	var best = [];
+	for (var i = 0; i < mi; ++i) {
+		if (data_array[i] == 0) {
+			var check = false;
+			for (var mask = 0; mask < mm; ++mask) {
+				if (visited[mask][i]) {
+					check = true;
+				}
+			}
+			if (check) {
+				best.push(2);
+			} else {
+				best.push(0);
+			}
+		} else {
+			best.push(data_array[i]);
+		}
+	}
+	return best;
 }
 
 function optimize() {
@@ -256,9 +347,6 @@ function optimize() {
 	if (city_cou < 2) return;
 
 	// Find the optimal steiner tree
-	solve(w, h, data_array);
-
-	/*
 	var best = solve(w, h, data_array);
 
 	// Change into the best state
@@ -279,7 +367,6 @@ function optimize() {
 
 	setHexgridJsonState(state);
 	enableButton(getSaveButton());
-	*/
 }
 
 function getSaveButton() {
