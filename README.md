@@ -4,11 +4,9 @@ In the popular game Sid Meier's Civilization V, players settle cities, build roa
 and do a bunch of other stuff not relevant to this project. The game takes place in a hexagonal
 grid, and each city or road occupies one hexagonal tile. Connecting cities with roads gives the player
 benefits, but since roads cost upkeep, it can be hard to do so while using the minimum amount of
-roads possible. If we assume that some roads have already been built and cannot be removed,
-it is in fact NP-hard by a reduction very similar to the last one in [this classic paper](https://www.jstor.org/stable/2100192).
+roads possible. In fact, the problem NP-hard, by a reduction similar to the one in [this paper](https://www.jstor.org/stable/2100192).
 
-The algorithm used to optimize paths is https://www.jstor.org/stable/3689922. Parameterized on the number of terminals k, its running time is O(3^k n), and it has the same space complexity O(3^k n).
-
+The idea of the site is to optimize path networks for the user. The algorithm currently used is https://www.jstor.org/stable/3689922. Parameterized on the number of terminals k, its running time is O(3^k n), and it has the same space complexity O(3^k n).
 
 ## Functionality:
 
