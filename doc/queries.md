@@ -10,11 +10,16 @@ and the other of which is the permissions of the maps creator on the map. SQLALc
 `INSERT INTO perm (date_created, date_modified, account_id, map_id, view_perm, edit_perm, owner_perm) VALUES (CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, ?, ?, ?, ?, ?)`
 If the maps creators user ID is 2, and the new maps ID is 7, when the values are `(None, 7, 1, 0, 0)` and `(2, 7, 1, 1, 1)` respectively for the two queries.
 
-### As a user, I want to edit the information of a map
+### As a user, I want to edit the details of a map
 This query too is handled by SQLAlchemy. If we modify the map with ID 7, changing its name to "test2", width to 1,
 and height to 20, then the produced query is
 `UPDATE map SET date_modified=CURRENT_TIMESTAMP, name=?, width=?, height=? WHERE map.id = ?`
 With values `('test2', 1, 20, 7)`
+
+### As a user, I want to delete a map
+Handled by SQLAlchemy. When deleting map ID 7, it produces the query
+`DELETE FROM map WHERE map.id = ?`
+with value `(6)`.
 
 ### As a user, I want to edit the hex grid of a map
 The editing happens client-side. When the user saves the edits, All existing hexes on the map are cleared, and the new hexes are placed to replace the old ones.

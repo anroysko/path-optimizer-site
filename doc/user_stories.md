@@ -1,7 +1,7 @@
 # User Stories
 [x] As a user, I want to make a new map
-[x] As a user, I want to edit the information of a map
-[ ] As a user, I want to delete a map (Implemented, currently has no HTML front)
+[x] As a user, I want to edit the details of a map
+[x] As a user, I want to delete a map
 [x] As a user, I want to edit the hex grid of a map
 [x] As a user, I want to be able to clear all roads from the hex grid with a single button press
 [x] As a user, I want to be able to optimize the roads in a certain maps hex grid
