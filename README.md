@@ -7,33 +7,34 @@ benefits, but since roads cost upkeep, it can be hard to do so while using the m
 roads possible. If we assume that some roads have already been built and cannot be removed,
 it is in fact NP-hard by a reduction very similar to the last one in [this classic paper](https://www.jstor.org/stable/2100192).
 
-The user can place cities and roads, then have an algorithm connect all cities with minimal number
-of roads added. They can also share the map to others by giving out its ID. If logged in, they can
-also share the map to specific other registered users.
+The algorithm used to optimize paths is https://www.jstor.org/stable/3689922. Parameterized on the number of terminals k, its running time is O(3^k n), and it has the same space complexity O(3^k n).
+
 
 ## Functionality:
-* Creating, editing, deleting and saving maps
-* Placing cities and roads on a map
-* Searching for maps by ID
-* Sharing maps with their ID
-* Registering and logging in, with server-side encryption of passwords
-* When logged in, Viewing maps you've created and maps shared to you
-* (TODO) If logged in, sharing maps with specific registered users
-* (TODO) Automatically completing road networks with approximate solutions
+
+The user can place cities and roads into a hex grid,
+then have an algorithm connect all cities with minimal number of added roads.
+
+An user can also share the map to others by giving out its ID,
+or if logged in, they can share the map to specific registered users.
+
+See [User Stories](./doc/user_stories.md) for more functionality.
 
 ## Documentation links
-These reflect the current state of the project. More detailed documents will be added later.
-
 [Heroku app](https://infinite-sands-84798.herokuapp.com/)
 
 [User Stories](./doc/user_stories.md)
+
+[Queries](./doc/queries.md)
 
 [Database Diagram](./doc/database_diagram.png)
 
 [Usage](./doc/usage.md)
 
-## Test account credentials
+[Installation](./doc/installation.md)
+
+[Future Development](./doc/future_development.md)
+
+## Test account credentials (in heroku)
 * username - password
 * user2 - pass2
-
-Map IDs 1-6 are in use. Maps 3 and 4 are by username, maps 5 and 6 by user2.
