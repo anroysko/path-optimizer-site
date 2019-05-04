@@ -24,7 +24,7 @@ def map_view(map_id):
 	# Get user perms on the map
 	view_perm, edit_perm, owner_perm = get_account_map_perms(current_user.get_id(), map_id)
 	if not view_perm:
-		return render_template("map/map.html", view_perm=False)
+		return login_manager.unauthorized()
 
 	# Load hexes in the map
 	jsn = build_hex_map(m)

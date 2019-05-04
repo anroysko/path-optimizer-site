@@ -1,284 +1,278 @@
 {% extends "layout.html" %}
 {% block body %}
-	{% if not view_perm %}
-		<h1>The map doesn't exist, or is private and you do not have permissions to view it.</h1>
-	{% else %}
+	<!--      -->
+	<!-- Tabs -->
+	<!--      -->
 
 
-		<!--      -->
-		<!-- Tabs -->
-		<!--      -->
-
-
-		<ul class="nav nav-pills mb-3" id="pills-tabs" role="tablist">
+	<ul class="nav nav-pills mb-3" id="pills-tabs" role="tablist">
+	<li class="nav-item">
+		<a class="nav-link active" id="map-tab" data-toggle="pill" href="#map" role="tab" aria-controls="map" aria-selected="true">Map</a>
+	</li>
+	<li class="nav-item">
+		<a class="nav-link" id="info-tab" data-toggle="pill" href="#info" role="tab" aria-controls="info" aria-selected="false">Information</a>
+	</li>
+	{% if owner_perm %}
 		<li class="nav-item">
-			<a class="nav-link active" id="map-tab" data-toggle="pill" href="#map" role="tab" aria-controls="map" aria-selected="true">Map</a>
+			<a class="nav-link" id="share-tab" data-toggle="pill" href="#share" role="tab" aria-controls="share" aria-selected="false">Share</a>
 		</li>
-		<li class="nav-item">
-			<a class="nav-link" id="info-tab" data-toggle="pill" href="#info" role="tab" aria-controls="info" aria-selected="false">Information</a>
-		</li>
-		{% if owner_perm %}
-			<li class="nav-item">
-				<a class="nav-link" id="share-tab" data-toggle="pill" href="#share" role="tab" aria-controls="share" aria-selected="false">Share</a>
-			</li>
-		{% endif %}
-		</ul>
-
-
-		<!--          -->
-		<!-- Tab divs -->
-		<!--          -->
-
-
-		<div class="tab-content" id="tabsContent">
-
-
-		<!--         -->
-		<!-- Map tab -->
-		<!--         -->
-
-
-		<div class="tab-pane show active fade" id="map" role="tabpanel" aria-labelledby="map-tab">
-
-			{% if edit_perm %}
-			<div class="card card-body">
-				<div class="container" style="padding-top:10px;padding-bottom:10px;">
-					<div class="row">
-						<div class="col" style="text-align:center;">
-							<div style="display:inline-block;">
-								<button type="button" id="save-button" class="btn btn-light" onclick="saveChanges()" disabled>Save Map</button>
-							</div>
-						</div>
-						<div class="col" style="text-align:center;">
-							<div style="display:inline-block;">
-								<button type="button" class="btn btn-primary" onclick="optimize()">Optimize paths</button>
-							</div>
-						</div>
-						<div class="col" style="text-align:center;">
-							<div style="display:inline-block;">
-								<button type="button" class="btn btn-primary" onclick="clearPaths()">Clear paths</button>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			{% endif %}
-
-			<!--            -->
-			<!-- Actual map -->
-			<!--            -->
-			<div id="hex-grid" class="hex-grid rounded-lg {% if not edit_perm %} read-only {% endif %}" data-w="{{found_map.width}}" data-h="{{found_map.height}}" data-hexes="{{ hexes_str }}">
-				<!-- Top padding -->
-				<div class="hex-row">
-				{% for x in range(2 * found_map.width + 4) %}
-					<div class="hex-filler"></div>
-				{% endfor %}
-				</div>
-
-				{% for y in range(found_map.height) %}
-					<div class="hex-row">
-						<!-- Left padding -->
-						{% if (y % 2 == 0) %}
-							<div class="hex-filler"></div>
-						{% endif %}
-						<div class="hex-filler"></div>
-
-						{% for x in range(found_map.width + (y % 2)) %}
-							{% set i = (x+y*(found_map.width + 1)) | string %}
-							{% if not i in hexes %}
-								<div id="{{ x }},{{ y }}" class="hex" onclick="hexClick({{ x }},{{ y }})"></div>
-							{% elif hexes[i] == "1" %}
-								<div id="{{ x }},{{ y }}" class="hex hex-city" onclick="hexClick({{ x }},{{ y }})"></div>
-							{% elif hexes[i] == "2" %}
-								<div id="{{ x }},{{ y }}" class="hex hex-road" onclick="hexClick({{ x }},{{ y }})"></div>
-							{% endif %}
-						{% endfor %}
-
-						<!-- Right padding -->
-						{% if (y % 2 == 0) %}
-							<div class="hex-filler"></div>
-						{% endif %}
-						<div class="hex-filler"></div>
-					</div>
-				{% endfor %}
-
-				<!-- Bottom padding -->
-				<div class="hex-row">
-				{% for x in range(2 * found_map.width + 4) %}
-					<div class="hex-filler"></div>
-				{% endfor %}
-				</div>
-			</div>
-		</div>
-
-
-		<!--                 -->
-		<!-- Information tab -->
-		<!--                 -->
-
-
-		<div class="tab-pane fade" id="info" role="tabpanel" aria-labelledby="info-tab">
-		<div class="card card-body">
-			<form method="POST" action="{{ url_for('map_edit', map_id = found_map.id) }}" class="needs-validation" novalidate>
-				<div class="form-group row">
-					<label for="new_name_field" class="col-sm-2 col-form-label">Name</label>
-					<div class="col-sm-4">
-					{% if not edit_perm %}
-						<input type="text" class="form-control-plaintext" id="new_name_field" name="name" value="{{ found_map.name }}" required readonly>
-					{% else %}
-						<input type="text" class="form-control" id="new_name_field" name="name" value="{{ found_map.name }}" required>
-					{% endif %}
-					<div class="invalid-feedback">
-					This field is required
-					</div>
-					</div>
-				</div>
-				<div class="form-group row">
-					<label for="new_width_field" class="col-sm-2 col-form-label">Width</label>
-					<div class="col-sm-4">
-					{% if not edit_perm %}
-						<input type="text" min="1" max="20" class="form-control-plaintext" id="new_width_field" name="width" value="{{ found_map.width }}" required readonly>
-					{% else %}
-						<input type="number" min="1" max="20" class="form-control" id="new_width_field" name="width" value="{{ found_map.width }}" required>
-					{% endif %}
-					<div class="invalid-feedback">
-					Width and height should be integers between 1 and 20
-					</div>
-					</div>
-				</div>
-				<div class="form-group row">
-					<label for="new_height_field" class="col-sm-2 col-form-label">Height</label>
-					<div class="col-sm-4">
-					{% if not edit_perm %}
-						<input type="text" min="1" max="20" class="form-control-plaintext" id="new_height_field" name="height" value="{{ found_map.height }}" required readonly>
-					{% else %}
-						<input type="number" min="1" max="20" class="form-control" id="new_height_field" name="height" value="{{ found_map.height }}" required>
-					{% endif %}
-					<div class="invalid-feedback">
-					Width and height should be integers between 1 and 20
-					</div>
-					</div>
-				</div>
-				{% if edit_perm %}
-					<div class="form-group row">
-						<div class="col-sm-6">
-						<button type="submit" class="btn btn-primary">Modify</button>
-						</div>
-					</div>
-				{% endif %}
-			</form>
-		</div>
-		</div>
-
-		{% if owner_perm %}
-
-			<!--           -->
-			<!-- Share tab -->
-			<!--           -->
-
-			<div class="tab-pane fade" id="share" role="tabpanel" aria-labelledby="share-tab">
-			<div class="card card-body">
-				<!-- TODO: invalid feedback currently never shows up -->
-				<div class="card-deck">
-					<div class="card">
-						<div class="card-body text-center">
-						<h5 class="card-title">Users with view permission</h5>
-						<div class="row" id="view-perm-users">
-						{% for usr in view_perm_users %}
-							<div class="col-sm-3 p-2 bd-highlight border rounded" id="view-perm-{{usr.username}}" role="alert">
-								<a href="javascript:;">{{usr.username}}</a>
-								<button type="button" class="close" onclick="removePerms('{{usr.username}}')" aria-label="Close">
-									<span aria-hidden="true">&times;</span>
-								</button>
-							</div>
-						{% endfor %}
-						</div>
-						</div>
-
-						<div class="card-footer text-muted">
-							<form class="form-inline" onsubmit="return viewShareSubmit();">
-								<div class="form-group mx-sm-2 mb-2">
-									<label for="viewShareTo" class="sr-only">username</label>
-									<input type="text" class="form-control" id="viewShareTo" placeholder="username">
-								</div>
-								<button type="submit" value="shareView" class="btn btn-primary mb-2">Add user</button>
-							</form>
-							<div class="alert alert-danger col-sm-6" style="margin-left: 10px; display:none;" role="alert" id="view-feedback">
-								No such user
-							</div>
-						</div>
-					</div>
-					<div class="card">
-						<div class="card-body text-center">
-						<h5 class="card-title">Users with edit permission</h5>
-						<div class="row" id="edit-perm-users">
-						{% for usr in edit_perm_users %}
-							<div class="col-sm-3 p-2 bd-highlight border rounded" id="edit-perm-{{usr.username}}" role="alert">
-								<a href="javascript:;">{{usr.username}}</a>
-								<button type="button" class="close" onclick="removePerms('{{usr.username}}')" aria-label="Close">
-									<span aria-hidden="true">&times;</span>
-								</button>
-							</div>
-						{% endfor %}
-						</div>
-						</div>
-
-						<div class="card-footer text-muted">
-							<form class="form-inline" onsubmit="return editShareSubmit();">
-								<div class="form-group mx-sm-2 mb-2">
-									<label for="editShareTo" class="sr-only">username</label>
-									<input type="text" class="form-control" id="editShareTo" placeholder="username">
-								</div>
-								<button type="submit" value="shareEdit" class="btn btn-primary mb-2">Add user</button>
-							</form>
-							<div class="alert alert-danger col-sm-6" style="margin-left: 10px; display:none;" role="alert" id="edit-feedback">
-								No such user
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<!-- This checkbox solution doesn't seem to fully work, if you refresh the page, -->
-				<!-- the last selected checkbox remains selected over the checkbox indicating currently active option. -->
-				<div class="card-deck" style="margin-top:50px;">
-					<div class="card">
-						<form onsubmit="return changeDefaultPerms()">
-							<div class="card-body">
-								<h5 class="card-title">Default permissions</h5>
-								<div class="form-check">
-									<input class="form-check-input" type="radio" name="share_radios" id="shareRadioNone" onclick="enableDefaultButton()" {% if default_perm_level == 0 %} checked {% endif %}>
-									<label class="form-check-label" for="shareRadioNone">
-									Hide this map from users it has not been shared to
-									</label>
-								</div>
-								<div class="form-check">
-									<input class="form-check-input" type="radio" name="share_radios" id="shareRadioView" onclick="enableDefaultButton()" {% if default_perm_level == 1 %} checked {% endif %}>
-									<label class="form-check-label" for="shareRadioView">
-									Allow anyone to view this map
-									</label>
-								</div>
-								<div class="form-check">
-									<input class="form-check-input" type="radio" name="share_radios" id="shareRadioEdit" onclick="enableDefaultButton()" {% if default_perm_level == 2 %} checked {% endif %}>
-									<label class="form-check-label" for="shareRadioEdit">
-									Allow anyone to edit this map
-									</label>
-								</div>
-							</div>
-							<div class="card-footer text-muted">
-								<div style="display:inline-block;">
-									<button type="submit" id="default-perm-button" class="btn btn-light" disabled>Change default permissions</button>
-								</div>
-							</div>
-						</form>
-					</div>
-				</div>
-			</div>
-			</div>
-		{% endif %}
-		</div>
-
-		<script src="/static/js/hexgrid.js"></script>
-		<script src="/static/js/share_perms.js"></script>
-		<script src="/static/js/bootstrap_forms.js"></script>
 	{% endif %}
+	</ul>
+
+
+	<!--          -->
+	<!-- Tab divs -->
+	<!--          -->
+
+
+	<div class="tab-content" id="tabsContent">
+
+
+	<!--         -->
+	<!-- Map tab -->
+	<!--         -->
+
+
+	<div class="tab-pane show active fade" id="map" role="tabpanel" aria-labelledby="map-tab">
+
+		{% if edit_perm %}
+		<div class="card card-body">
+			<div class="container" style="padding-top:10px;padding-bottom:10px;">
+				<div class="row">
+					<div class="col" style="text-align:center;">
+						<div style="display:inline-block;">
+							<button type="button" id="save-button" class="btn btn-light" onclick="saveChanges()" disabled>Save Map</button>
+						</div>
+					</div>
+					<div class="col" style="text-align:center;">
+						<div style="display:inline-block;">
+							<button type="button" class="btn btn-primary" onclick="optimize()">Optimize paths</button>
+						</div>
+					</div>
+					<div class="col" style="text-align:center;">
+						<div style="display:inline-block;">
+							<button type="button" class="btn btn-primary" onclick="clearPaths()">Clear paths</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		{% endif %}
+
+		<!--            -->
+		<!-- Actual map -->
+		<!--            -->
+		<div id="hex-grid" class="hex-grid rounded-lg {% if not edit_perm %} read-only {% endif %}" data-w="{{found_map.width}}" data-h="{{found_map.height}}" data-hexes="{{ hexes_str }}">
+			<!-- Top padding -->
+			<div class="hex-row">
+			{% for x in range(2 * found_map.width + 4) %}
+				<div class="hex-filler"></div>
+			{% endfor %}
+			</div>
+
+			{% for y in range(found_map.height) %}
+				<div class="hex-row">
+					<!-- Left padding -->
+					{% if (y % 2 == 0) %}
+						<div class="hex-filler"></div>
+					{% endif %}
+					<div class="hex-filler"></div>
+
+					{% for x in range(found_map.width + (y % 2)) %}
+						{% set i = (x+y*(found_map.width + 1)) | string %}
+						{% if not i in hexes %}
+							<div id="{{ x }},{{ y }}" class="hex" onclick="hexClick({{ x }},{{ y }})"></div>
+						{% elif hexes[i] == "1" %}
+							<div id="{{ x }},{{ y }}" class="hex hex-city" onclick="hexClick({{ x }},{{ y }})"></div>
+						{% elif hexes[i] == "2" %}
+							<div id="{{ x }},{{ y }}" class="hex hex-road" onclick="hexClick({{ x }},{{ y }})"></div>
+						{% endif %}
+					{% endfor %}
+
+					<!-- Right padding -->
+					{% if (y % 2 == 0) %}
+						<div class="hex-filler"></div>
+					{% endif %}
+					<div class="hex-filler"></div>
+				</div>
+			{% endfor %}
+
+			<!-- Bottom padding -->
+			<div class="hex-row">
+			{% for x in range(2 * found_map.width + 4) %}
+				<div class="hex-filler"></div>
+			{% endfor %}
+			</div>
+		</div>
+	</div>
+
+
+	<!--                 -->
+	<!-- Information tab -->
+	<!--                 -->
+
+
+	<div class="tab-pane fade" id="info" role="tabpanel" aria-labelledby="info-tab">
+	<div class="card card-body">
+		<form method="POST" action="{{ url_for('map_edit', map_id = found_map.id) }}" class="needs-validation" novalidate>
+			<div class="form-group row">
+				<label for="new_name_field" class="col-sm-2 col-form-label">Name</label>
+				<div class="col-sm-4">
+				{% if not edit_perm %}
+					<input type="text" class="form-control-plaintext" id="new_name_field" name="name" value="{{ found_map.name }}" required readonly>
+				{% else %}
+					<input type="text" class="form-control" id="new_name_field" name="name" value="{{ found_map.name }}" required>
+				{% endif %}
+				<div class="invalid-feedback">
+				This field is required
+				</div>
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="new_width_field" class="col-sm-2 col-form-label">Width</label>
+				<div class="col-sm-4">
+				{% if not edit_perm %}
+					<input type="text" min="1" max="20" class="form-control-plaintext" id="new_width_field" name="width" value="{{ found_map.width }}" required readonly>
+				{% else %}
+					<input type="number" min="1" max="20" class="form-control" id="new_width_field" name="width" value="{{ found_map.width }}" required>
+				{% endif %}
+				<div class="invalid-feedback">
+				Width and height should be integers between 1 and 20
+				</div>
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="new_height_field" class="col-sm-2 col-form-label">Height</label>
+				<div class="col-sm-4">
+				{% if not edit_perm %}
+					<input type="text" min="1" max="20" class="form-control-plaintext" id="new_height_field" name="height" value="{{ found_map.height }}" required readonly>
+				{% else %}
+					<input type="number" min="1" max="20" class="form-control" id="new_height_field" name="height" value="{{ found_map.height }}" required>
+				{% endif %}
+				<div class="invalid-feedback">
+				Width and height should be integers between 1 and 20
+				</div>
+				</div>
+			</div>
+			{% if edit_perm %}
+				<div class="form-group row">
+					<div class="col-sm-6">
+					<button type="submit" class="btn btn-primary">Modify</button>
+					</div>
+				</div>
+			{% endif %}
+		</form>
+	</div>
+	</div>
+
+	{% if owner_perm %}
+
+		<!--           -->
+		<!-- Share tab -->
+		<!--           -->
+
+		<div class="tab-pane fade" id="share" role="tabpanel" aria-labelledby="share-tab">
+		<div class="card card-body">
+			<!-- TODO: invalid feedback currently never shows up -->
+			<div class="card-deck">
+				<div class="card">
+					<div class="card-body text-center">
+					<h5 class="card-title">Users with view permission</h5>
+					<div class="row" id="view-perm-users">
+					{% for usr in view_perm_users %}
+						<div class="col-sm-3 p-2 bd-highlight border rounded" id="view-perm-{{usr.username}}" role="alert">
+							<a href="javascript:;">{{usr.username}}</a>
+							<button type="button" class="close" onclick="removePerms('{{usr.username}}')" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+					{% endfor %}
+					</div>
+					</div>
+
+					<div class="card-footer text-muted">
+						<form class="form-inline" onsubmit="return viewShareSubmit();">
+							<div class="form-group mx-sm-2 mb-2">
+								<label for="viewShareTo" class="sr-only">username</label>
+								<input type="text" class="form-control" id="viewShareTo" placeholder="username">
+							</div>
+							<button type="submit" value="shareView" class="btn btn-primary mb-2">Add user</button>
+						</form>
+						<div class="alert alert-danger col-sm-6" style="margin-left: 10px; display:none;" role="alert" id="view-feedback">
+							No such user
+						</div>
+					</div>
+				</div>
+				<div class="card">
+					<div class="card-body text-center">
+					<h5 class="card-title">Users with edit permission</h5>
+					<div class="row" id="edit-perm-users">
+					{% for usr in edit_perm_users %}
+						<div class="col-sm-3 p-2 bd-highlight border rounded" id="edit-perm-{{usr.username}}" role="alert">
+							<a href="javascript:;">{{usr.username}}</a>
+							<button type="button" class="close" onclick="removePerms('{{usr.username}}')" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+					{% endfor %}
+					</div>
+					</div>
+
+					<div class="card-footer text-muted">
+						<form class="form-inline" onsubmit="return editShareSubmit();">
+							<div class="form-group mx-sm-2 mb-2">
+								<label for="editShareTo" class="sr-only">username</label>
+								<input type="text" class="form-control" id="editShareTo" placeholder="username">
+							</div>
+							<button type="submit" value="shareEdit" class="btn btn-primary mb-2">Add user</button>
+						</form>
+						<div class="alert alert-danger col-sm-6" style="margin-left: 10px; display:none;" role="alert" id="edit-feedback">
+							No such user
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- This checkbox solution doesn't seem to fully work, if you refresh the page, -->
+			<!-- the last selected checkbox remains selected over the checkbox indicating currently active option. -->
+			<div class="card-deck" style="margin-top:50px;">
+				<div class="card">
+					<form onsubmit="return changeDefaultPerms()">
+						<div class="card-body">
+							<h5 class="card-title">Default permissions</h5>
+							<div class="form-check">
+								<input class="form-check-input" type="radio" name="share_radios" id="shareRadioNone" onclick="enableDefaultButton()" {% if default_perm_level == 0 %} checked {% endif %}>
+								<label class="form-check-label" for="shareRadioNone">
+								Hide this map from users it has not been shared to
+								</label>
+							</div>
+							<div class="form-check">
+								<input class="form-check-input" type="radio" name="share_radios" id="shareRadioView" onclick="enableDefaultButton()" {% if default_perm_level == 1 %} checked {% endif %}>
+								<label class="form-check-label" for="shareRadioView">
+								Allow anyone to view this map
+								</label>
+							</div>
+							<div class="form-check">
+								<input class="form-check-input" type="radio" name="share_radios" id="shareRadioEdit" onclick="enableDefaultButton()" {% if default_perm_level == 2 %} checked {% endif %}>
+								<label class="form-check-label" for="shareRadioEdit">
+								Allow anyone to edit this map
+								</label>
+							</div>
+						</div>
+						<div class="card-footer text-muted">
+							<div style="display:inline-block;">
+								<button type="submit" id="default-perm-button" class="btn btn-light" disabled>Change default permissions</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		</div>
+	{% endif %}
+	</div>
+
+	<script src="/static/js/hexgrid.js"></script>
+	<script src="/static/js/share_perms.js"></script>
+	<script src="/static/js/bootstrap_forms.js"></script>
 {% endblock %}
