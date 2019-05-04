@@ -375,8 +375,10 @@ function optimize() {
 
 
 function saveChanges() {
-	const base_url = window.location.href
+	const base_url = window.location.href.split('?')[0];
 	const req_url = base_url + "/save";
+
+	console.log(base_url);
 
 	// Post the save request
 	var xhr = new XMLHttpRequest();

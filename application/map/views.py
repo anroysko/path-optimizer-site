@@ -73,10 +73,26 @@ def map_edit(map_id):
 
 @app.route("/map/search", methods=["POST"])
 def map_search():
-	form = SearchMapForm(request.form)
-	if not form.validate():
+	map_id = None
+	try:
+		map_id = int(request.get_json()["id"]);
+	except KeyboardInterrupt:
+		raise
+	except:
+		map_id = None
+
+	if map_id is None:
 		abort(400) # Bad request
-	return redirect("/map/" + str(form.map_id.data))
+	
+	m = Map.query.get(map_id)
+	if m == None:
+		abort(404) # Resource doesn't exist
+
+	view_perm, edit_perm, owner_perm = get_account_map_perms(current_user.get_id(), map_id)
+	if not view_perm:
+		abort(401) # Not authorized
+
+	return ('', 204) # Success
 
 @app.route("/map/<map_id>/delete", methods=["POST"])
 def map_delete(map_id):

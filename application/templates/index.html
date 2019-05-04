@@ -57,20 +57,29 @@
 </div>
 <div id="collapseTwo" class="collapse hide">
 	<div class="card-body">
-		<form action="{{ url_for('map_search') }}" method="POST" class="needs-validation" novalidate>
-			<div class="form-group row">
-				<label for="search_id_field" class="col-sm-1 col-form-label">Map ID</label>
-				<div class="col-sm-2">
-					<input type="number" min="1" class="form-control" id="search_id_field" name="map_id" required>
-					<div class="invalid-feedback">
-						IDs are positive integers
-					</div>
-				</div>
-				<div class="col-sm-3">
-					<button type="submit" class="btn btn-primary">Search</button>
+		<div class="form-group row">
+			<label for="search-id-field" class="col-sm-1 col-form-label" disable-valid-styling="true">Map ID</label>
+			<div class="col-sm-2">
+				<input type="number" class="form-control" id="search-id-field" name="map-id">
+				<div class="invalid-feedback">
+					IDs are positive integers
 				</div>
 			</div>
-		</form>
+			<div class="col-sm-3">
+				<button type="submit" class="btn btn-primary" onclick="searchMap()">Search</button>
+			</div>
+		</div>
+		<div class="row">
+			<div class="alert alert-danger col-sm-4" style="margin-left: 10px; display: none;" role="alert" id="search-feedback-404">
+				That map doesn't exist
+			</div>
+			<div class="alert alert-danger col-sm-4" style="margin-left: 10px; display: none;" role="alert" id="search-feedback-401">
+				You don't have permission to view that map
+			</div>
+			<div class="alert alert-danger col-sm-4" style="margin-left: 10px; display: none;" role="alert" id="search-feedback-400">
+				Invalid value
+			</div>
+		</div>
 	</div>
 </div>
 
@@ -106,4 +115,5 @@
 {% endif %}
 
 <script src="/static/js/bootstrap_forms.js"></script>
+<script src="/static/js/search_query.js"></script>
 {% endblock %}

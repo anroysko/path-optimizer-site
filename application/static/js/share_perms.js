@@ -80,7 +80,7 @@ function updateHTML(usr, vp, ep) {
 }
 
 function changePerms(usr, vp, ep, delayed) {
-	const base_url = window.location.href;
+	const base_url = window.location.href.split('?')[0];
 	const req_url = base_url + "/edit_perms";
 
 	// Post the save request
