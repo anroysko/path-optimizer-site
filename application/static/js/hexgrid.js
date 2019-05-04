@@ -202,8 +202,9 @@ function buildPaths(i, mask, visited, edges, data_array, dp) {
 	}
 }
 
+// Parameterized algorithm for steiner tree (improved D-W)
+// Let k be the number of cities, and n=w*h Then this is O(3^k n)
 function solve(w, h, data_array) {
-	// Let k be the number of cities, and n=w*h Then this is O(3^k n + 2^k n^2)
 	var k = 0;
 	var city_xs = [];
 	var city_ys = [];
@@ -257,7 +258,7 @@ function solve(w, h, data_array) {
 			}
 		}
 
-		// O(2^k n^2) part
+		// O(2^k n) part, so this doesn't affect the overall running time
 		var que = [];
 		for (var d = 0; d <= mi; ++d) {
 			que.push([]);
