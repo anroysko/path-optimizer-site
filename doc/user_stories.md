@@ -4,7 +4,7 @@
 [ ] As a user, I want to delete a map (Implemented, currently has no HTML front)
 [x] As a user, I want to edit the hex grid of a map
 [x] As a user, I want to be able to clear all roads from the hex grid with a single button press
-[ ] As a user, I want to be able to optimize the roads in a certain maps hex grid
+[x] As a user, I want to be able to optimize the roads in a certain maps hex grid
 [x] As a user, I want to share maps by giving out its URL
 [x] As a user, I want to register
 [x] As a user, I want to log in

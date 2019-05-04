@@ -27,6 +27,9 @@ with values `(1, 2, 1, 7)` for a city at location `(1, 2)`.
 ### As a user, I want to be able to clear all roads from the hex grid with a single button press
 A purely client-side functionality. As such, there are no related SQL-commands
 
+### As a user, I want to be able to optimize the roads in a certain maps hex grid
+A purely client-side functionality.
+
 ### As a user, I want to share maps by giving out its URL
 A purely client-side functionality.
 

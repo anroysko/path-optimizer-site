@@ -57,9 +57,15 @@ The Map-tab is always visible, and displays the map. If you have edit permission
 And a hex grid. If you do not have edit permission, the three buttons are not visible, and there
 is a dark overlay over the hex grid.
 
+In the hex grid, dark grey hexes correspond to cities, and yellow hexes correspond to roads.
+
 You can click on any hex in the grid to switch its state in the cycle empty -> city -> road -> empty.
 Clicking "Save Map" saves your changes. "Optimize" adds the minimum number of roads required to
 connect all cities. "Clear Paths" clears all paths from the map.
+
+Note that the problem is NP-complete. The algorithm used is parameterized on the number of cities,
+in particular, it's running time is `O(3^k n)`, where n is the number of hexes on the map. Therefore
+having too many cities can cause the calculation to never finish. About 14 should be the highest feasible amount.
 
 ### Information-tab
 The Information-tab displays the name, width and height of the map. If you have edit permission on the map,

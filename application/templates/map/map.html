@@ -10,7 +10,7 @@
 		<a class="nav-link active" id="map-tab" data-toggle="pill" href="#map" role="tab" aria-controls="map" aria-selected="true">Map</a>
 	</li>
 	<li class="nav-item">
-		<a class="nav-link" id="info-tab" data-toggle="pill" href="#info" role="tab" aria-controls="info" aria-selected="false">Information</a>
+		<a class="nav-link" id="info-tab" data-toggle="pill" href="#info" role="tab" aria-controls="info" aria-selected="false">Details</a>
 	</li>
 	{% if owner_perm %}
 		<li class="nav-item">
@@ -113,65 +113,87 @@
 
 
 	<div class="tab-pane fade" id="info" role="tabpanel" aria-labelledby="info-tab">
-	<div class="card card-body">
-		<form method="POST" action="{{ url_for('map_edit', map_id = found_map.id) }}" class="needs-validation" novalidate>
-			<div class="form-group row">
-				<label for="new_name_field" class="col-sm-2 col-form-label">Name</label>
-				<div class="col-sm-4">
-				{% if not edit_perm %}
-					<input type="text" class="form-control-plaintext" id="new_name_field" name="name" value="{{ found_map.name }}" required readonly>
-				{% else %}
-					<input type="text" class="form-control" id="new_name_field" name="name" value="{{ found_map.name }}" required>
-				{% endif %}
-				<div class="invalid-feedback">
-				This field is required
-				</div>
+		<div class="card card-body">
+			<div class="card-deck">
+				<div class="card">
+					<form method="POST" action="{{ url_for('map_edit', map_id = found_map.id) }}" class="needs-validation" novalidate>
+						<div class="card-body">
+							<h5 class="card-title">Map details</h5>
+							<div class="form-group row">
+								<label for="new_name_field" class="col-sm-2 col-form-label">Name</label>
+								<div class="col-sm-4">
+								{% if not edit_perm %}
+									<input type="text" class="form-control-plaintext" id="new_name_field" name="name" value="{{ found_map.name }}" required readonly>
+								{% else %}
+									<input type="text" class="form-control" id="new_name_field" name="name" value="{{ found_map.name }}" required>
+								{% endif %}
+								<div class="invalid-feedback">
+								This field is required
+								</div>
+								</div>
+							</div>
+							<div class="form-group row">
+								<label for="new_width_field" class="col-sm-2 col-form-label">Width</label>
+								<div class="col-sm-4">
+								{% if not edit_perm %}
+									<input type="text" min="1" max="20" class="form-control-plaintext" id="new_width_field" name="width" value="{{ found_map.width }}" required readonly>
+								{% else %}
+									<input type="number" min="1" max="20" class="form-control" id="new_width_field" name="width" value="{{ found_map.width }}" required>
+								{% endif %}
+								<div class="invalid-feedback">
+								Width and height should be integers between 1 and 20
+								</div>
+								</div>
+							</div>
+							<div class="form-group row">
+								<label for="new_height_field" class="col-sm-2 col-form-label">Height</label>
+								<div class="col-sm-4">
+								{% if not edit_perm %}
+									<input type="text" min="1" max="20" class="form-control-plaintext" id="new_height_field" name="height" value="{{ found_map.height }}" required readonly>
+								{% else %}
+									<input type="number" min="1" max="20" class="form-control" id="new_height_field" name="height" value="{{ found_map.height }}" required>
+								{% endif %}
+								<div class="invalid-feedback">
+								Width and height should be integers between 1 and 20
+								</div>
+								</div>
+							</div>
+						</div>
+						{% if edit_perm %}
+						<div class="card-footer text-muted">
+							<div style="height:40px;">
+								<button type="submit" class="btn btn-primary mb-4">Modify</button>
+							</div>
+						</div>
+						{% endif %}
+					</form>
 				</div>
 			</div>
-			<div class="form-group row">
-				<label for="new_width_field" class="col-sm-2 col-form-label">Width</label>
-				<div class="col-sm-4">
-				{% if not edit_perm %}
-					<input type="text" min="1" max="20" class="form-control-plaintext" id="new_width_field" name="width" value="{{ found_map.width }}" required readonly>
-				{% else %}
-					<input type="number" min="1" max="20" class="form-control" id="new_width_field" name="width" value="{{ found_map.width }}" required>
-				{% endif %}
-				<div class="invalid-feedback">
-				Width and height should be integers between 1 and 20
-				</div>
-				</div>
-			</div>
-			<div class="form-group row">
-				<label for="new_height_field" class="col-sm-2 col-form-label">Height</label>
-				<div class="col-sm-4">
-				{% if not edit_perm %}
-					<input type="text" min="1" max="20" class="form-control-plaintext" id="new_height_field" name="height" value="{{ found_map.height }}" required readonly>
-				{% else %}
-					<input type="number" min="1" max="20" class="form-control" id="new_height_field" name="height" value="{{ found_map.height }}" required>
-				{% endif %}
-				<div class="invalid-feedback">
-				Width and height should be integers between 1 and 20
-				</div>
-				</div>
-			</div>
-			{% if edit_perm %}
-				<div class="form-group row">
-					<div class="col-sm-6">
-					<button type="submit" class="btn btn-primary">Modify</button>
+			{% if owner_perm %}
+			<div class="card-deck" style="margin-top:50px;">
+				<div class="card">
+					<div class="card-body">
+						<h5 class="card-title">Delete Map</h5>
+						<p class="card-text">This action cannot be reversed.</p>
+					</div>
+					<div class="card-footer text-muted">
+						<form class="form-inline" method="POST" action="{{ url_for('map_delete', map_id = found_map.id) }}">
+							<button type="submit" class="btn btn-primary mb-2">Delete</button>
+						</form>
 					</div>
 				</div>
+			</div>
 			{% endif %}
-		</form>
+		</div>
 	</div>
-	</div>
+
+
+	<!--           -->
+	<!-- Share tab -->
+	<!--           -->
 
 	{% if owner_perm %}
-
-		<!--           -->
-		<!-- Share tab -->
-		<!--           -->
-
-		<div class="tab-pane fade" id="share" role="tabpanel" aria-labelledby="share-tab">
+	<div class="tab-pane fade" id="share" role="tabpanel" aria-labelledby="share-tab">
 		<div class="card card-body">
 			<!-- TODO: invalid feedback currently never shows up -->
 			<div class="card-deck">
@@ -268,8 +290,9 @@
 				</div>
 			</div>
 		</div>
-		</div>
+	</div>
 	{% endif %}
+
 	</div>
 
 	<script src="/static/js/hexgrid.js"></script>
