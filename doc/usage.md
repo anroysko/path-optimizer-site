@@ -38,7 +38,7 @@ This page has three tabs:
 
 * Map
 
-* Properties
+* Details
 
 * Share
 
@@ -69,13 +69,13 @@ Note that the problem is NP-complete. The algorithm used is parameterized on the
 in particular, it's running time is `O(3^k n)`, where n is the number of hexes on the map. Therefore
 having too many cities can cause the calculation to never finish. About 14 should be the highest feasible amount.
 
-### Properties
-The Properties-tab displays two cards, one displaying the map's properties, and the other allowing you to delete the map.
+### Details
+The Details-tab displays two cards, one displaying the map's properties, and the other allowing you to delete the map.
 The delete-card is visible only if you have owner permissions on the map.
 
 If you have edit permissions on the map, the properties-card will appear as a form, where you can edit the values, and then submit.
 
-If you have owner permisions on the map, you can click the "Delete"-button to permanently delete the map.
+If you have owner permisions on the map, you can click the "Delete"-button in the second card to permanently delete the map.
 
 ### Share-tab
 The share tab is only visible if you are the owner of the map.
